@@ -7,9 +7,9 @@
     <ProjectGuid>{BA07A868-20B7-4F30-8D72-2EEFAC7D178A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Stationeers_Basic_Bepinex_plugin</RootNamespace>
-    <AssemblyName>Stationeers Basic Bepinex plugin</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <RootNamespace>StationeersCreativeFreedom</RootNamespace>
+    <AssemblyName>Stationeers Creative Freedom</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <TargetFrameworkProfile />
@@ -35,13 +35,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="0Harmony">
-      <HintPath>..\Libraries\0Harmony.dll</HintPath>
+      <HintPath>..\..\Stationeers Basic Bepinex plugin\Libraries\0Harmony.dll</HintPath>
     </Reference>
     <Reference Include="Assembly-CSharp">
-      <HintPath>..\Libraries\Assembly-CSharp.dll</HintPath>
+      <HintPath>..\..\Stationeers Basic Bepinex plugin\Libraries\Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="BepInEx">
-      <HintPath>..\Libraries\BepInEx.dll</HintPath>
+      <HintPath>..\..\Stationeers Basic Bepinex plugin\Libraries\BepInEx.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -50,29 +50,29 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="Unity.Collections">
-      <HintPath>..\Libraries\Unity.Collections.dll</HintPath>
+      <HintPath>..\..\Stationeers Basic Bepinex plugin\Libraries\Unity.Collections.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine">
-      <HintPath>..\Libraries\UnityEngine.dll</HintPath>
+      <HintPath>..\..\Stationeers Basic Bepinex plugin\Libraries\UnityEngine.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
-      <HintPath>..\Libraries\UnityEngine.CoreModule.dll</HintPath>
+      <HintPath>..\..\Stationeers Basic Bepinex plugin\Libraries\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.GridModule">
-      <HintPath>..\Libraries\UnityEngine.GridModule.dll</HintPath>
+      <HintPath>..\..\Stationeers Basic Bepinex plugin\Libraries\UnityEngine.GridModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.InputModule">
-      <HintPath>..\Libraries\UnityEngine.InputModule.dll</HintPath>
+      <HintPath>..\..\Stationeers Basic Bepinex plugin\Libraries\UnityEngine.InputModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.PhysicsModule">
-      <HintPath>..\Libraries\UnityEngine.PhysicsModule.dll</HintPath>
+      <HintPath>..\..\Stationeers Basic Bepinex plugin\Libraries\UnityEngine.PhysicsModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>..\Libraries\UnityEngine.UI.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BasicBepinexPlugin_Patches.cs" />
+    <Compile Include="StationeersCreativeFreedom_Patches.cs" />
     <Compile Include="patcher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

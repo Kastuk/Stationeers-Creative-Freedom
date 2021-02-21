@@ -6,23 +6,23 @@ using BepInEx;
 using HarmonyLib;
 using UnityEngine;
 
-namespace Stationeers_BasicBepinexPlugin
+namespace StationeersCreativeFreedom
 {
-        [BepInPlugin("net.kastuk.stationeers.BasicBepinexPlugin", "Stationeers Basic Bepinex Plugin", "0.1.0.0")]
-        public class StationeersBasicBepinexPlugin : BaseUnityPlugin
+        [BepInPlugin("net.kastuk.stationeers.CreativeFreedom", "Stationeers Creative Freedom", "0.1.0.0")]
+        public class StationeersCreativeFreedom : BaseUnityPlugin
         {
             public void Log(string line)
             {
-                Debug.Log("[BasicBepinexPlugin]: " + line);
+                Debug.Log("[StationeersCreativeFreedom]: " + line);
             }
 
         private void Awake()
         {
-            StationeersBasicBepinexPlugin.Instance = this;
+            StationeersCreativeFreedom.Instance = this;
             this.Log("Hello World");
             try
             {
-                Harmony harmony = new Harmony("net.kastuk.stationeers.BasicBepinexPlugin");
+                Harmony harmony = new Harmony("net.kastuk.stationeers.CreativeFreedom");
                 harmony.PatchAll();
                 this.Log("Patch succeeded");
             }
@@ -33,6 +33,6 @@ namespace Stationeers_BasicBepinexPlugin
                 this.Log(e.ToString());
             }
         }
-        public static StationeersBasicBepinexPlugin Instance;
+        public static StationeersCreativeFreedom Instance;
     }
  }

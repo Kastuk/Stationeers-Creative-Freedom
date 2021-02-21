@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.1401
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stationeers Basic Bepinex plugin", "Stationeers Basic Bepinex plugin\Stationeers Basic Bepinex plugin.csproj", "{BA07A868-20B7-4F30-8D72-2EEFAC7D178A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StationeersCreativeFreedom", "Stationeers Basic Bepinex plugin\StationeersCreativeFreedom.csproj", "{BA07A868-20B7-4F30-8D72-2EEFAC7D178A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
