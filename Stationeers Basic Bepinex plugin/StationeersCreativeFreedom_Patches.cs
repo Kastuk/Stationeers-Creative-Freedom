@@ -14,6 +14,12 @@ using Assets.Scripts.Objects.Structures;
 
 using Assets.Scripts.Objects.Items;
 
+/*
+Thanks to guiding of the TurkeyKittin! 
+And other guide of RoboPhred.
+And inspiration from DevCo constructions.
+*/
+
 namespace StationeersCreativeFreedom
 {
 
@@ -43,7 +49,7 @@ namespace StationeersCreativeFreedom
         }
     }
 
-    #endregion
+    #endregion Structure
 
     #region SmallGrid
 
@@ -100,7 +106,7 @@ namespace StationeersCreativeFreedom
             __result = true;
         }
     }
-    #endregion
+    #endregion SmallGrid
     
     #region Devices
     [HarmonyPatch(typeof(Airlock), "CanConstruct")]
