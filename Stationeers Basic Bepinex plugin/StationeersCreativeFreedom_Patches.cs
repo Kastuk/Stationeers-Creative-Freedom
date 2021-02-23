@@ -22,6 +22,8 @@ using Assets.Scripts.Networking;
 using Assets.Scripts.Objects.Electrical;
 using Assets.Scripts.Objects.Entities;
 
+using Assets.Scripts.Inventory;
+
 using Assets.Scripts.Util;
 using Objects.Items;
 using Assets.Scripts.Objects.Items;
@@ -88,6 +90,24 @@ namespace StationeersCreativeFreedom
     //        return true;
     //    }
     //}
+    //public class CrativeConstruction
+    //{
+    //    private void CatchFreshConstruction()
+    //    {
+    //        Structure.OnConstructed += new Thing.Event(this.MessThisStructure);
+    //    }
+
+    //    private void MessThisStructure()
+    //    {
+    //        Structure createdStructure = Structure.LastCreatedStructure;
+    //        if ((UnityEngine.Object)createdStructure != (UnityEngine.Object)null)
+    //        {
+
+
+    //        }
+    //    }
+    //}
+
 
     [HarmonyPatch(typeof(OnServer), "Create", new Type[] {typeof(CreateStructureInstance)})]
     internal class OnServer_Create_Patch
@@ -96,21 +116,30 @@ namespace StationeersCreativeFreedom
         {
             if (WorldManager.Instance.GameMode == GameMode.Creative)
             {
-                int maxstate = __result.BuildStates.Count;
-                if (maxstate > 1)
+                int buildst = 0;
+                int colorcan = -1;
+
+                //foreach (var mozek in Brain.PlayerBrains.Values) //catch idea of search in lists from liz's AtomicBatteryPatch
+                foreach (var chel in Human.AllHumans)
                 {
-                    __result.CurrentBuildStateIndex = maxstate;
-
-                  //  __result.CmdConstructionUpdateRequest();
-                  //  __result.UpdateStateVisualizer(false);
-                    //or three in the same
-                   // __result.UpdateBuildStateAndVisualizer(maxstate, 0);
-
+                    if (chel.OwnerSteamId == __result.OwnerSteamId)
+                    {
+                        Human parentHuman = null;
+                        parentHuman = chel;
+                        bool suitis = (parentHuman.Suit == null || parentHuman == null);
+                        if (!suitis)
+                        {
+                            //Debug.LogError("Builder catched");
+                            buildst = (int)(Math.Round(parentHuman.Suit.OutputTemperature - 293.15f)); //temperature +20C = CustomColorIndex 0
+                            colorcan = (int)(Math.Round(parentHuman.Suit.OutputSetting - 50f)); //pressure 101.325 = CurrentBuildState 0
+                        }
+                    }
                 }
+                    __result.UpdateBuildStateAndVisualizer(buildst, 0);
+                //thanks to inaki for missed lib com.unity.multiplayer-hlapi.Runtime.dll
 
                 if (__result.PaintableMaterial != null)
                 {
-                    int colorcan = 6;
                     OnServer.SetCustomColor(__result, colorcan);
                 }
             }

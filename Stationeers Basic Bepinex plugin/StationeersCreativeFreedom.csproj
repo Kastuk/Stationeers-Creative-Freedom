@@ -43,6 +43,9 @@
     <Reference Include="BepInEx">
       <HintPath>..\..\Stationeers Basic Bepinex plugin\Libraries\BepInEx.dll</HintPath>
     </Reference>
+    <Reference Include="com.unity.multiplayer-hlapi.Runtime">
+      <HintPath>..\..\Stationeers Basic Bepinex plugin\Libraries\com.unity.multiplayer-hlapi.Runtime.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
