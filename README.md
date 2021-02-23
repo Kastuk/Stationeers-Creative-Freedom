@@ -18,7 +18,9 @@ Temperature 19-21 for CurrentBuildState -1 (destroyed) - 2 (completed frame).
 
 ---
 
-What can bring errors:
-Please, evade values over max limit (not limited for now).
-Beware not to put big frame into big frame.
-Using of smart rotate from unusual angle will bring red texts too.
+What can bring errors: 
+Please, evade suit values over max limit (not limited for now). 
+Beware not to put big frame into big frame. 
+Using of smart rotate from unusual angle will bring red text too.
+
+There's also wreckage at -1 state.
