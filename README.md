@@ -2,10 +2,23 @@
 Break the limits of creativity!
 
 Breaks:
-Limit of construction placing for big and small grid objects.
-Can put wires across devices and place big things in the air.
-Can rotate grid things any way.
+Limits of construction for big and small grid objects.
+Can put wires across devices and put big things in the air.
+Can rotate grid things in any way.
 
-Also:
+Modified parameters:
 speedup of mining drill to dig much faster
 higher jetpack heightlimit
+
+---
+Can change default build state and color of construction in Creative mode.
+Suit controls the construction parameters:
+Pressure 50-61 for CustomColorIndex 0 (blue) - 11 (Purple).
+Temperature 19-21 for CurrentBuildState -1 (destroyed) - 2 (completed frame).
+
+---
+
+What can bring errors:
+Please, evade values over max limit (not limited for now).
+Beware not to put big frame into big frame.
+Using of smart rotate from unusual angle will bring red texts too.
