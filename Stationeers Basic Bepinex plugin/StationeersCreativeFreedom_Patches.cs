@@ -1,18 +1,32 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 
 using BepInEx;
 using HarmonyLib;
 using UnityEngine;
+using UnityEngine.Networking;
 using JetBrains.Annotations;
 
 using Assets.Scripts;
+using Assets.Scripts.UI;
 using Assets.Scripts.Objects;
 using Assets.Scripts.Objects.Structures;
 
+using Assets.Scripts.GridSystem;
+using Assets.Scripts.Networking;
+
+using Assets.Scripts.Objects.Electrical;
+using Assets.Scripts.Objects.Entities;
+
+using Assets.Scripts.Util;
+using Objects.Items;
 using Assets.Scripts.Objects.Items;
+
+
 
 /*
 Thanks to guiding of the TurkeyKittin! 
@@ -31,7 +45,7 @@ namespace StationeersCreativeFreedom
         [UsedImplicitly]//dunno what is for, something for simpler replacing of the field values.
         private static void Postfix(Structure __instance)
         {
-            __instance.RotationAxis = RotationAxis.All;
+            __instance.RotationAxis = RotationAxis.All; //thanks for Kamuchi for idea of using the named enumerator values
             __instance.AllowedRotations = AllowedRotations.All;
 
             //TODO key switcher to change precisement of constructions
@@ -48,6 +62,61 @@ namespace StationeersCreativeFreedom
             __result = true;
         }
     }
+
+    //for Authoring tool - set final buildstate and custom color by colorcan in second hand
+    //[HarmonyPatch(typeof(MultiConstructor), "Construct")]
+    //internal class MultiConstructor_Construct_Patch
+    //{
+    //    private static bool Prefix(ref MultiConstructor __instance, CreateStructureInstance createStructureInstance, Grid3 localPosition, Quaternion targetRotation, int optionIndex, Item offhandItem, bool authoringMode, ulong steamId, Mothership mothership, int quantity)
+    //    {
+    //        if (WorldManager.Instance.GameMode == GameMode.Creative)
+    //        {
+    //            new CreateStructureInstance(__instance.Constructables[optionIndex], localPosition, targetRotation, steamId, -1);
+
+    //            createStructureInstance.BuildStates.Count = num1
+
+    //            bool flag2 = __instance.PaintableMaterial != null && __instance.CustomColor.Normal != null;
+    //            if (flag2)
+    //            {
+    //                createStructureInstance.CustomColor = __instance.CustomColor.Index;
+    //            }
+    //            OnServer.Create(createStructureInstance);
+
+    //            return false;
+    //        }
+
+    //        return true;
+    //    }
+    //}
+
+    [HarmonyPatch(typeof(OnServer), "Create", new Type[] {typeof(CreateStructureInstance)})]
+    internal class OnServer_Create_Patch
+    {
+        private static void Postfix(Structure __result)
+        {
+            if (WorldManager.Instance.GameMode == GameMode.Creative)
+            {
+                int maxstate = __result.BuildStates.Count;
+                if (maxstate > 1)
+                {
+                    __result.CurrentBuildStateIndex = maxstate;
+
+                  //  __result.CmdConstructionUpdateRequest();
+                  //  __result.UpdateStateVisualizer(false);
+                    //or three in the same
+                   // __result.UpdateBuildStateAndVisualizer(maxstate, 0);
+
+                }
+
+                if (__result.PaintableMaterial != null)
+                {
+                    int colorcan = 6;
+                    OnServer.SetCustomColor(__result, colorcan);
+                }
+            }
+        }
+    }
+
 
     #endregion Structure
 
@@ -96,6 +165,7 @@ namespace StationeersCreativeFreedom
         {
             __result.result = Structure.WallMountResult.Valid;
         }
+        //thanks to the TurkeyKittin.
     }
 
     [HarmonyPatch(typeof(MountedSmallGrid), "CanConstruct")]
@@ -119,6 +189,31 @@ namespace StationeersCreativeFreedom
     }
     #endregion
 
+    #region DynamicThing
+    [HarmonyPatch(typeof(Entity), "EntityDeath")]
+    internal class Entity_Start_Patch
+    {
+        [UsedImplicitly]
+        private static void Prefix(Entity __instance)
+        {
+            __instance.DecayTimeSecs = 500;
+            //copied from DeepMine mod of daniellovell
+        }
+    }
+
+    [HarmonyPatch(typeof(DynamicSkeleton), "Start")]
+    internal class DynamicSkeleton_Start_Patch
+    {
+        [UsedImplicitly]
+        private static void Postfix(DynamicSkeleton __instance, ref float ___DestroyTimer)
+        {
+            ___DestroyTimer = 500f;
+            //copied from DeepMine mod of daniellovell
+        }
+    }
+    #endregion DynamicThing
+
+
     #region Items
     [HarmonyPatch(typeof(MiningDrill), "Awake")]
     internal class MiningDrill_Awake_Patch
@@ -128,6 +223,7 @@ namespace StationeersCreativeFreedom
         {
             __instance.MineCompletionTime = 0.01f;
             __instance.MineAmount = 1f;
+            //copied from DeepMine mod of daniellovell
         }
     }
     #endregion
@@ -156,4 +252,8 @@ namespace StationeersCreativeFreedom
     //    }
     //}
     #endregion
+
+    #region Entity
+
+    #endregion Entity
 }
