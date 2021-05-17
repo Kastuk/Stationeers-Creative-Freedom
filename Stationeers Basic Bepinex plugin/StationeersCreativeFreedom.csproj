@@ -55,6 +55,9 @@
     <Reference Include="Unity.Collections">
       <HintPath>..\..\Stationeers Basic Bepinex plugin\Libraries\Unity.Collections.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.TextMeshPro">
+      <HintPath>..\..\Stationeers Basic Bepinex plugin\Libraries\Unity.TextMeshPro.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine">
       <HintPath>..\..\Stationeers Basic Bepinex plugin\Libraries\UnityEngine.dll</HintPath>
     </Reference>
@@ -70,12 +73,21 @@
     <Reference Include="UnityEngine.PhysicsModule">
       <HintPath>..\..\Stationeers Basic Bepinex plugin\Libraries\UnityEngine.PhysicsModule.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.TextCoreModule">
+      <HintPath>..\..\Stationeers Basic Bepinex plugin\Libraries\UnityEngine.TextCoreModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TextRenderingModule">
+      <HintPath>..\..\Stationeers Basic Bepinex plugin\Libraries\UnityEngine.TextRenderingModule.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.UI">
-      <HintPath>..\Libraries\UnityEngine.UI.dll</HintPath>
+      <HintPath>..\..\Stationeers Basic Bepinex plugin\Libraries\UnityEngine.UI.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="StationeersCreativeFreedom_Patches.cs" />
+    <Compile Include="Creative BuildState and CustomColor.cs" />
+    <Compile Include="Custom World Panel.cs" />
+    <Compile Include="StationeersCreativeFreedom modifiers.cs" />
+    <Compile Include="StationeersCreativeFreedom breaks.cs" />
     <Compile Include="patcher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
