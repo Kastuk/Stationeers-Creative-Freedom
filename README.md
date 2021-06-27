@@ -24,3 +24,12 @@ Beware not to put big frame into big frame.
 Using of smart rotate from unusual angle will bring red text too.
 
 There's also wreckage at -1 state.
+
+=============
+Installation
+=============
+Download last stable BepInEx release:
+https://github.com/BepInEx/BepInEx/releases
+Unpack it into SteamLibrary\steamapps\common\Stationeers folder
+Run Stationeers once, so BepInEx will be installed.
+Place dll file of the mod into Stationeers\BepInEx\plugins
