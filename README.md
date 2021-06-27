@@ -13,8 +13,8 @@ higher jetpack heightlimit
 ---
 Can change default build state and color of construction in Creative mode.
 Suit controls the construction parameters:
-Pressure 50-61 for CustomColorIndex 0 (blue) - 11 (Purple).
-Temperature 19-21 for CurrentBuildState -1 (destroyed) - 2 (completed frame).
+* Pressure 50-61 for CustomColorIndex 0 (blue) - 11 (Purple).
+* Temperature 19-21 for CurrentBuildState -1 (destroyed) - 2 (completed frame).
 
 Creatively spawned items will be placed into empty hand.
 
