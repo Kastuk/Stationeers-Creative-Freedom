@@ -25,6 +25,8 @@ Using of smart rotate from unusual angle will bring red text too.
 
 There's also wreckage at -1 state.
 
+Creatively spawned items will be placed in empty hand (rovers and entities included, so it may be a problem)
+
 =============
 Installation
 =============
