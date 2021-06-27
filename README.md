@@ -2,13 +2,13 @@
 Break the limits of creativity!
 
 Breaks:
-Limits of construction for big and small grid objects.
-Can put wires across devices and put big things in the air.
-Can rotate grid things in any way.
+* Limits of construction for big and small grid objects.
+* Can put wires across devices and put big things in the air.
+* Can rotate grid things in any way.
 
 Modified parameters:
-speedup of mining drill to dig much faster
-higher jetpack heightlimit
+* Speedup of mining drill to dig much faster
+* Higher jetpack heightlimit
 
 ---
 Can change default build state and color of construction in Creative mode.
