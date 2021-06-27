@@ -16,18 +16,20 @@ Suit controls the construction parameters:
 Pressure 50-61 for CustomColorIndex 0 (blue) - 11 (Purple).
 Temperature 19-21 for CurrentBuildState -1 (destroyed) - 2 (completed frame).
 
+Creatively spawned items will be placed into empty hand.
+
 ---
 
-What can bring errors: 
-Please, evade suit values over max limit (not limited for now). 
-Beware not to put big frame into big frame. 
-Using of smart rotate from unusual angle will bring red text too.
+What can bring errors and problems: 
+---
+Beware not to place big frame structure into another big frame. 
+Using of smart rotation at unusual angle will bring red text too.
 
-There's also wreckage at -1 state.
+There's also trashy wreckage at -1 buildstate.
 
-Creatively spawned items will be placed in empty hand (rovers and entities included, so it may be a problem)
+Creatively spawned items will be placed into empty hand (rovers, entities and dynamic tanks included, so it may push you away)
 
-=============
+
 Installation
 =============
 Download last stable BepInEx release:
