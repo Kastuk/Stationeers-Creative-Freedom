@@ -29,9 +29,16 @@ There's also trashy wreckage at -1 buildstate.
 
 Creatively spawned items will be placed into empty hand (rovers, entities and dynamic tanks included, so it may push you away)
 
+TODO
+---
+Inteface menu to config parameters and switch options.
+Checks for creative mode.
+More things for breaking free...
 
 Installation
 =============
+Download last stable (I hope) release of compiled mod:
+https://github.com/Kastuk/Stationeers-Creative-Freedom/releases
 Download last stable BepInEx release:
 https://github.com/BepInEx/BepInEx/releases
 Unpack it into SteamLibrary\steamapps\common\Stationeers folder
