@@ -11,7 +11,7 @@ Modified parameters:
 * Higher jetpack heightlimit
 
 ---
-Can change default build state and color of construction in Creative mode.
+Can change default build state and color of construction, when constructing things with AuthoringTool.
 Suit controls the construction parameters:
 * Pressure 50-61 for CustomColorIndex 0 (blue) - 11 (Purple).
 * Temperature 19-21 for CurrentBuildState -1 (destroyed) - 2 (completed frame).
