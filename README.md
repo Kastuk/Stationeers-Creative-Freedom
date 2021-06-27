@@ -32,7 +32,9 @@ Creatively spawned items will be placed into empty hand (rovers, entities and dy
 TODO
 ---
 Inteface menu to config parameters and switch options.
+
 Checks for creative mode.
+
 More things for breaking free...
 
 Installation
