@@ -52,7 +52,7 @@
 //And Inaki's exercises!
 //*/
 
-//namespace StationeersCreativeFreedom
+//namespace CreativeFreedom
 //{
 
 //    [HarmonyPatch(typeof(PanelCustomWorld), "GetTerrainGenerationData")]

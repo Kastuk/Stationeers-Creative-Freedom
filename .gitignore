@@ -260,3 +260,6 @@ paket-files/
 __pycache__/
 *.pyc
 /Stationeers Basic Bepinex plugin/CameraFX.cs
+/Stationeers Basic Bepinex plugin/LightenUp.cs
+/Stationeers Basic Bepinex plugin/OreSculpting.cs
+/Stationeers Basic Bepinex plugin/EditPlacedThings.cs

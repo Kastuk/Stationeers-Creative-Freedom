@@ -27,6 +27,7 @@ using Assets.Scripts.Inventory;
 using Assets.Scripts.Util;
 using Objects.Items;
 using Assets.Scripts.Objects.Items;
+using Assets.Scripts.Voxel;
 
 
 
@@ -37,45 +38,43 @@ And inspiration from DevCo constructions.
 And Inaki's exercises!
 */
 
-namespace StationeersCreativeFreedom
+namespace CreativeFreedom
 {
 
 
     #region DynamicThing
-    [HarmonyPatch(typeof(Entity), "EntityDeath")]
-    internal class Entity_Start_Patch
-    {
-        [UsedImplicitly]
-        private static void Prefix(Entity __instance)
-        {
-            __instance.DecayTimeSecs = 500;
-        }
-    }
+    //[HarmonyPatch(typeof(Entity), "EntityDeath")]
+    //internal class Entity_Start_Patch
+    //{
+    //    [UsedImplicitly]
+    //    private static void Prefix(Entity __instance)
+    //    {
+    //        __instance.DecayTimeSecs = 500;
+    //    }
+    //}
 
-    [HarmonyPatch(typeof(DynamicSkeleton), "Start")]
-    internal class DynamicSkeleton_Start_Patch
-    {
-        [UsedImplicitly]
-        private static void Postfix(DynamicSkeleton __instance, ref float ___DestroyTimer)
-        {
-            ___DestroyTimer = 500f;
-        }
-    }
+    //[HarmonyPatch(typeof(DynamicSkeleton), "Start")]
+    //internal class DynamicSkeleton_Start_Patch
+    //{
+    //    [UsedImplicitly]
+    //    private static void Postfix(DynamicSkeleton __instance, ref float ___DestroyTimer)
+    //    {
+    //        ___DestroyTimer = 500f;
+    //    }
+    //}
     #endregion DynamicThing
 
 
     #region Items
     [HarmonyPatch(typeof(MiningDrill), "OnUsePrimary")]
-    internal class MiningDrill_Awake_Patch
+    internal class MiningDrill_Speedup
     {
         [UsedImplicitly]
         private static void Prefix(MiningDrill __instance)
         {
-            if (WorldManager.Instance.GameMode == GameMode.Creative)
-            {
-                __instance.MineCompletionTime = 0.01f; //copied from DeepMine mod of daniellovell
-                __instance.MineAmount = 1f;
-            }
+            __instance.MineCompletionTime = FreedomConfig.MineCompletionTime; //copied from DeepMine mod of daniellovell
+              //  __instance.MineAmount = 0.5f;
+            
             //else
             //{ __instance.MineCompletionTime = __instance.MineCompletionTime; 
             //__instance.MineAmount = __instance.MineAmount;}
@@ -83,21 +82,33 @@ namespace StationeersCreativeFreedom
         }
     }
 
-    
+
     #endregion
 
     #region Movement
-    [HarmonyPatch(typeof(MovementController), "SetMovementMode")]
-    internal class MovementController_Start_Patch
+        [HarmonyPatch(typeof(MovementController), "SetMovementMode")]
+    internal class Jetpack_HeightLimit
     {
         [UsedImplicitly]
-        private static bool Prefix(MovementController __instance, ref float ___defaultJetpackMaxHeight)
+        private static void Prefix(MovementController __instance, ref float ___defaultJetpackMaxHeight)
         {
-            if (WorldManager.Instance.GameMode == GameMode.Creative)
-            { ___defaultJetpackMaxHeight = 500f; }
-            return true;
+            ___defaultJetpackMaxHeight = FreedomConfig.JetpackMaxHeight; // 10f; 
+            
+            //return true;
         }
     }
+    [HarmonyPatch(typeof(Jetpack), "LateUpdate")]
+    internal class Jetpack_Speed
+    {
+        private static void Postfix (Jetpack __instance)
+        {
+            if (__instance.PrefabHash == -412551656) //hardjetpack
+            {
+                __instance.JetPackSpeed = FreedomConfig.JetpackHeavySpeed;
+            }
+        }
+    }
+
     #endregion
 
     #region Mothership
