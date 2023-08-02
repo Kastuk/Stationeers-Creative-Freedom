@@ -7,14 +7,13 @@ Breaking limits:
 * Can put wires across devices and put big things in the air.
 * Can rotate grid things in any way.
 
-Modify limits:
+Modifying limits:
 * Maximize build state of spawned structures with Authoring tool.
 * Speedup of mining drill to dig much faster.
 * Higher jetpack height limit.
 
-Config for modified limits will be after game load once in 
+Config for modified limits will be after game load once in
 Stationeers\BepInEx\config\net.kastuk.stationeers.CreativeFreedom.cfg
----
 
 What can bring errors and problems: 
 ---
@@ -29,6 +28,7 @@ Switch mountable into small grid placement type to place buttons on tables and s
 
 More things for breaking free...
 
+=============
 Installation
 =============
 1. Download last stable (I hope) release of compiled mod:
