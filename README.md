@@ -28,7 +28,6 @@ Switch mountable into small grid placement type to place buttons on tables and s
 
 More things for breaking free...
 
-=============
 Installation
 =============
 1. Download last stable (I hope) release of compiled mod:
