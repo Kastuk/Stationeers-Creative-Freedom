@@ -12,24 +12,22 @@ Modifying limits:
 * Speedup of mining drill to dig much faster.
 * Higher jetpack height limit.
 
-Config for modified limits will be after game load once in 
-Stationeers\BepInEx\config\net.kastuk.stationeers.CreativeFreedom.cfg
----
+Config for modified limits will be after game load once in
+**Stationeers\BepInEx\config\net.kastuk.stationeers.CreativeFreedom.cfg**
 
-What can bring errors and problems:
+What can bring errors and problems: 
 ---
 Try not to place big frame structure into another big frame. 
 Using of smart rotation at unlocked angles will bring red text too.
 
-----
-TODO:
+TODO
+---
 Inteface menu to config parameters and switch options.
 Changeable color of spawning structures and items.
 Switch mountable into small grid placement type to place buttons on tables and stuff.
 
 More things for breaking free...
 
-=============
 Installation
 =============
 1. Download last stable (I hope) release of compiled mod:
