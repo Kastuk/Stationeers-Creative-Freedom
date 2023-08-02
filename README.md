@@ -12,22 +12,9 @@ Modifying limits:
 * Speedup of mining drill to dig much faster.
 * Higher jetpack height limit.
 
-Config for modified limits will be after game load once in
+Config for modified limits will be here (after game load once with the mod):
 
 **Stationeers\BepInEx\config\net.kastuk.stationeers.CreativeFreedom.cfg**
-
-What can bring errors and problems: 
----
-Try not to place big frame structure into another big frame. 
-Using of smart rotation at unlocked angles will bring red text too.
-
-TODO
----
-Inteface menu to config parameters and switch options.
-Changeable color of spawning structures and items.
-Switch mountable into small grid placement type to place buttons on tables and stuff.
-
-More things for breaking free...
 
 Installation
 =============
@@ -38,3 +25,18 @@ https://github.com/BepInEx/BepInEx/releases
 3. Unpack it into SteamLibrary\steamapps\common\Stationeers folder
 4. Run Stationeers once, so BepInEx will be installed.
 5. Place dll file of the mod into Stationeers\BepInEx\plugins
+
+
+What can bring errors and problems: 
+---
+Try not to place big frame structure into another big frame. 
+Using of smart rotation at unlocked angles will bring red text too.
+
+TODO
+---
+Inteface window menu or console commands for ingame config.
+Changeable color of spawning structures and items.
+Switcher key to change placement type of mountable things to small grid (to place buttons on tables and stuff).
+Lighted up the game by disabling some features (Main Menu scene and Stationpedia) to reduce memory load at slow pc.
+
+More things for breaking free...

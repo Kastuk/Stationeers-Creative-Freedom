@@ -8,12 +8,12 @@ using UnityEngine;
 
 namespace CreativeFreedom
 {
-        [BepInPlugin("net.kastuk.stationeers.CreativeFreedom", "Creative Freedom", "0.8.9")]
+        [BepInPlugin("net.kastuk.stationeers.CreativeFreedom", "Creative Freedom", "0.8.9.5")]
         public class CreativeFreedom : BaseUnityPlugin
         {
             public void Log(string line)
             {
-                Debug.Log("[CreativeFreedom (01/08/2023)]: " + line);
+                Debug.Log("[CreativeFreedom (02/08/2023)]: " + line);
             }
 
 
