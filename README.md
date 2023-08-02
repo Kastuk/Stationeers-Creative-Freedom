@@ -13,7 +13,7 @@ Modifying limits:
 * Higher jetpack height limit.
 
 Config for modified limits will be after game load once in
-Stationeers\BepInEx\config\net.kastuk.stationeers.CreativeFreedom.cfg
+**Stationeers\BepInEx\config\net.kastuk.stationeers.CreativeFreedom.cfg**
 
 What can bring errors and problems: 
 ---
