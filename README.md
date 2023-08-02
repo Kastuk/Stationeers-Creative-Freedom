@@ -2,39 +2,30 @@
 Break the limits of creativity!
 My first attempt for hardmodding the Unity game.
 
-Breaks:
+Breaking limits:
 * Limits of construction for big and small grid objects.
 * Can put wires across devices and put big things in the air.
 * Can rotate grid things in any way.
 
-Modified parameters:
-* Speedup of mining drill to dig much faster
-* Higher jetpack heightlimit
+Modify limits:
+* Maximize build state of spawned structures with Authoring tool.
+* Speedup of mining drill to dig much faster.
+* Higher jetpack height limit.
 
----
-Can change default build state and color of construction, when constructing things with AuthoringTool.
-Suit controls the construction parameters:
-* Pressure 50-61 for CustomColorIndex 0 (blue) - 11 (Purple).
-* Temperature 19-21 for CurrentBuildState -1 (destroyed) - 2 (completed frame).
-
-Creatively spawned items will be placed into empty hand.
-
+Config for modified limits will be after game load once in 
+Stationeers\BepInEx\config\net.kastuk.stationeers.CreativeFreedom.cfg
 ---
 
 What can bring errors and problems: 
 ---
-Beware not to place big frame structure into another big frame. 
-Using of smart rotation at unusual angle will bring red text too.
-
-There's also trashy wreckage at -1 buildstate.
-
-Creatively spawned items will be placed into empty hand (rovers, entities and dynamic tanks included, so it may push you away)
+Try not to place big frame structure into another big frame. 
+Using of smart rotation at unlocked angles will bring red text too.
 
 TODO
 ---
 Inteface menu to config parameters and switch options.
-
-Checks for creative mode.
+Changeable color of spawning structures and items.
+Switch mountable into small grid placement type to place buttons on tables and stuff.
 
 More things for breaking free...
 
