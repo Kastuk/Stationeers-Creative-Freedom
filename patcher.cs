@@ -57,7 +57,7 @@ namespace CreativeFreedom
             MaxBuildState = cf.Config.Bind("General", "MaxBuildState", true, "Spawn fully completed constructions with Authoring tool.").Value;
             MineCompletionTime = cf.Config.Bind("General", "MineCompletionTime", 0.12f, "This is time spend on digging with mining drill. Vanilla value is 0.12, lesser is faster, too fast will glitch.").Value;
             JetpackMaxHeight = cf.Config.Bind("General", "JetpackMaxHeight", 100.0f, "This is maximum height of jetpack above ground level. Vanilla value is 10.0").Value;
-            JetpackHeavySpeed = cf.Config.Bind("General", "JetpackHeavySpeed", 10.0f, "This is basic speed of hard jetpack.").Value;
+            JetpackHeavySpeed = cf.Config.Bind("General", "JetpackHeavySpeed", 10.0f, "This is basic speed of hard jetpack. Vanilla value must be 8, I suppose...").Value;
         }
     }
 }
