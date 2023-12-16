@@ -86,30 +86,142 @@ namespace CreativeFreedom
     #endregion
 
     #region Movement
-        [HarmonyPatch(typeof(MovementController), "SetMovementMode")]
+    [HarmonyPatch(typeof(MovementController), "HandleJetpack")]
     internal class Jetpack_HeightLimit
     {
         [UsedImplicitly]
-        private static void Prefix(MovementController __instance, ref float ___defaultJetpackMaxHeight)
+        private static void Prefix(MovementController __instance)//, ref float ___defaultJetpackMaxHeight)
         {
-            ___defaultJetpackMaxHeight = FreedomConfig.JetpackMaxHeight; // 10f; 
-            
+            if (FreedomConfig.JetpackSwitcher)
+            {
+                __instance.defaultJetpackMaxHeight = FreedomConfig.JetpackMaxHeight; // 10f; 
+            }
             //return true;
         }
     }
-    [HarmonyPatch(typeof(Jetpack), "LateUpdate")]
-    internal class Jetpack_Speed
-    {
-        private static void Postfix (Jetpack __instance)
+
+
+    [HarmonyPatch(typeof(Jetpack))]
+    internal class Jetpack_Modify
+    { //Mostly stolen from FuelJetpack of the Thunder
+        public static Dictionary<Jetpack, float> OrigSpeed = new Dictionary<Jetpack, float>();
+
+        [HarmonyPatch("Awake")]
+        [HarmonyPostfix]
+        private static void SaveOriginalValues(Jetpack __instance)
         {
-            if (__instance.PrefabHash == -412551656) //hardjetpack
+            if (FreedomConfig.JetpackSwitcher)
             {
-                __instance.JetPackSpeed = FreedomConfig.JetpackHeavySpeed;
+                OrigSpeed[__instance] = __instance.JetPackSpeed;
+                Debug.Log("Orig speed of " + __instance.PrefabName + " is " + __instance.JetPackSpeed);
+            }
+        }
+
+
+        [HarmonyPatch("LateUpdate")]
+        [HarmonyPostfix]
+        private static void IncreaseSpeed(Jetpack __instance)
+        {
+            if (FreedomConfig.JetpackSwitcher && WorldManager.Instance.GameMode == GameMode.Creative)
+            {
+                if (KeyManager.GetButtonDown(KeyCode.LeftShift))
+                {
+                    __instance.JetPackSpeed = OrigSpeed[__instance] * FreedomConfig.JetpackModSpeed;
+                }
+                if (KeyManager.GetButtonUp(KeyCode.LeftShift))
+                {
+                    __instance.JetPackSpeed = OrigSpeed[__instance];
+                }
+            }
+        }
+
+        [HarmonyPatch("OnAtmosphericTick")]
+        [HarmonyPrefix]
+        private static bool NoFumes(Jetpack __instance)
+        {
+            if (FreedomConfig.JetpackSwitcher && FreedomConfig.InfiniteJetpack && WorldManager.Instance.GameMode == GameMode.Creative)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        [HarmonyPatch("HasPropellent", MethodType.Getter)]
+        [HarmonyPostfix]
+
+        private static void AlwaysGotFuel(ref bool __result)
+        {
+            if (FreedomConfig.JetpackSwitcher && FreedomConfig.InfiniteJetpack && WorldManager.Instance.GameMode == GameMode.Creative)
+            {
+                __result = true;
             }
         }
     }
-
     #endregion
+
+    #region Camera
+    [HarmonyPatch(typeof(CameraController), "ManagerAwake")]
+    internal class Camera_FOV_Limits
+    {
+        [UsedImplicitly]
+        private static void Postfix(CameraController __instance)//, ref float ___defaultJetpackMaxHeight)
+        {
+            __instance.MinFoV = 3f; //default is 50f
+            __instance.MaxFoV = 160f; //default is 130f
+
+            //return true;
+        }
+    }
+
+    [HarmonyPatch(typeof(CameraController), "FovIncrease")]
+    internal class Camera_FOV_Increase
+    {
+        [UsedImplicitly]
+        private static bool Prefix(CameraController __instance)//, ref float ___defaultJetpackMaxHeight)
+        {
+            if (Input.GetKey(KeyCode.RightControl))
+            {
+                float num = CameraController.CurrentCamera.fieldOfView;
+                if (num < __instance.MaxFoV)
+                {
+                    if (num >= __instance.MaxFoV - 6f)
+                    {
+                        num = __instance.MaxFoV;
+                    }
+                    else num += 6f;
+                }
+                CameraController.SetFieldOfView(num);
+                return false;
+            }
+            else return true;
+        }
+    }
+
+    [HarmonyPatch(typeof(CameraController), "FovDecrease")]
+    internal class Camera_FOV_Decrease
+    {
+        [UsedImplicitly]
+        private static bool Prefix(CameraController __instance)//, ref float ___defaultJetpackMaxHeight)
+        {
+            if (Input.GetKey(KeyCode.RightControl))
+            {
+                float num = CameraController.CurrentCamera.fieldOfView;
+                if (num > __instance.MinFoV)
+                {
+                    if (num <= __instance.MinFoV + 6f)
+                    {
+                        num = __instance.MinFoV;
+                    }
+                    else num -= 6f;
+                }
+                CameraController.SetFieldOfView(num);
+                return false;
+            }
+            else return true;
+        }
+    }
+
+    #endregion Camera
 
     #region Mothership
     //need to disable rotation limit for z and x axis
@@ -126,6 +238,6 @@ namespace CreativeFreedom
 
 
     #region Entity
-
+    //TODO disable decay of corpses and skeletons without specific atmos conditions.
     #endregion Entity
 }

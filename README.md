@@ -35,6 +35,7 @@ Using of smart rotation at unlocked angles will bring red text too.
 TODO
 ---
 *Inteface window menu or console commands for ingame config.
+*Scale up Spawn Menu to make it more readable.
 *Changeable color of spawning structures and items.
 *Switcher key to change placement type of mountable things to small grid (to place buttons on tables and stuff).
 *Lighted up the game by disabling some features (Main Menu scene and Stationpedia) to reduce memory load at slow pc.

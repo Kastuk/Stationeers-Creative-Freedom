@@ -42,6 +42,21 @@ namespace CreativeFreedom
 
     #region Structure
 
+    [HarmonyPatch(typeof(InventoryManager), "UsePrimaryComplete")]
+    public class MaxBuildState
+    {
+        [UsedImplicitly]
+        public static void Postfix()
+        {
+            if (InventoryManager.IsAuthoringMode && FreedomConfig.MaxBuildState == true)
+            {
+                Structure str = Structure.LastCreatedStructure; //THanks to inaki for tip
+                int bstate = str.BuildStates.Count - 1;
+                str.UpdateBuildStateAndVisualizer(bstate);
+                //str.SetCustomColor(AuthorToolColorKeys.colorIndex);
+            }
+        }
+    }
     //[HarmonyPatch(typeof(InventoryManager), "PlacementMode")]
     //internal class InventoryManager_PlacementMode_Patch
     //{
@@ -60,40 +75,32 @@ namespace CreativeFreedom
 
     //    }
     //}
-
-
-    [HarmonyPatch(typeof(Structure), "Awake")]
-    internal class Structure_Rotation_Unlock
+    [HarmonyPatch(typeof(CanConstructInfo), "CanConstruct", MethodType.Getter)]
+    internal class CanConstructInfo_CanConstruct_Getter
     {
-        [UsedImplicitly]//dunno what is for, something for simpler replacing of the field values.
-        private static void Postfix(Structure __instance)
+        private static void Postfix(ref bool __result)
         {
-            __instance.RotationAxis = RotationAxis.All; //thanks for Kamuchi for idea of using the named enumerator values
-            __instance.AllowedRotations = AllowedRotations.All;
-
-            //TODO key switcher to change precisement of constructions
-            //__instance.GridSize = 0.5f; 
-            //__instance.PlacementType = PlacementSnap.Grid;
+            __result = true;
         }
     }
 
-        //[HarmonyPatch(typeof(Structure), "CanConstruct")]
-        //internal class Structure_CanConstruct_Patch
-        //{
-        //    private static void Postfix(ref CanConstructInfo __result)
-        //    {
-        //       __result = CanConstructInfo.ValidPlacement;
-        //    }
-        //}
-        //[HarmonyPatch(typeof(Structure), "CanConstructCell")]
-        // [UsedImplicitly]
-        //  internal class Structure_CanConstructCell_Patch
-        //{
-        //    private static void Postfix(ref CanConstructInfo __result)
-        //    {
-        //        __result = CanConstructInfo.ValidPlacement;
-        //    }
-        //}
+    [HarmonyPatch(typeof(Structure), "CanConstruct")]
+    internal class Structure_CanConstruct_Patch
+    {
+        private static void Postfix(ref CanConstructInfo __result)
+        {
+            __result = CanConstructInfo.ValidPlacement;
+        }
+    }
+    [HarmonyPatch(typeof(Structure), "CanConstructCell")]
+    [UsedImplicitly]
+    internal class Structure_CanConstructCell_Patch
+    {
+        private static void Postfix(ref CanConstructInfo __result)
+        {
+            __result = CanConstructInfo.ValidPlacement;
+        }
+    }
 
     [HarmonyPatch(typeof(CanConstructInfo), "InvalidPlacement")]
     public class InvalidPlacement_Always_Allowed
@@ -152,9 +159,9 @@ namespace CreativeFreedom
     [HarmonyPatch(typeof(SmallGrid), "CanMountOnWall")]
     internal class SmallGrid_CanMountOnWall_Patch
     {
-        private static void Postfix(ref Structure.CanMountResult __result)
+        private static void Postfix(ref CanMountResult __result)
         {
-            __result.result = Structure.WallMountResult.Valid;
+            __result.result = WallMountResult.Valid; //fix for 27/09/2023
         }
         //thanks to the TurkeyKittin.
     }
