@@ -29,6 +29,7 @@ Installation
 https://github.com/Kastuk/Stationeers-Creative-Freedom/releases
 2. Download last stable BepInEx release:
 https://github.com/BepInEx/BepInEx/releases
+Supposedly x64 for your Windows or unix for Linux.
 3. Unpack it into SteamLibrary\steamapps\common\Stationeers folder
 4. Run Stationeers once, so BepInEx will be installed.
 5. Place dll file of the mod into Stationeers\BepInEx\plugins
