@@ -2,17 +2,24 @@
 Break the limits of creativity!
 My first attempt for hardmodding the Unity game.
 
-Breaking limits:
-* Limits of construction for big and small grid objects.
-* Can put wires across devices and put big things in the air.
-* Can rotate grid things in any way.
+- skip collision checks for structures, so you can overlap things and place cables under devices and circuits.
+- can cross cables/pipes without merging, so you can overlap networks.
+- unlocked rotation limits (disabled by default, as for now it have problem with smart rotation by *C*)
+- raised jetpack effective height (configurable)
+- changeable mine drilling speed (in config file)
 
-Modifying limits:
-* Maximize build state of spawned structures with Authoring tool.
-* Speedup of mining drill to dig much faster.
-* Higher jetpack height limit.
+Creative Only:
+- spawn menu set to constant scale mode (to fix tiny size on wide screen).
+- spawn completed structures (last build stage)
+- endless jetpack without fumes (no need propellant)
+- speedup jetpack by Shift (like in FuelJetpack mod)
+- endless terrain manipulator, which can place dirt anywhere (unfinished option to place ore and geysers)
+- clean built-in nightvision by *N* for any race
+- long burning flares and chemlights
+- bigger range of zoom by FieldOfView keys, can look close at celestal bodies and far structures.
 
-Config for modified limits will be here (after game load once with the mod):
+
+Config for modified limits and switchers will be here (after game load once with the mod):
 
 **Stationeers\BepInEx\config\net.kastuk.stationeers.CreativeFreedom.cfg**
 
@@ -26,6 +33,8 @@ https://github.com/BepInEx/BepInEx/releases
 4. Run Stationeers once, so BepInEx will be installed.
 5. Place dll file of the mod into Stationeers\BepInEx\plugins
 
+You can also use Steam Workshop and StationeersMods plugin:
+https://steamcommunity.com/sharedfiles/filedetails/?id=3193624149
 
 What can bring errors and problems: 
 ---
@@ -35,7 +44,6 @@ Using of smart rotation at unlocked angles will bring red text too.
 TODO
 ---
 *Inteface window menu or console commands for ingame config.
-*Scale up Spawn Menu to make it more readable.
 *Changeable color of spawning structures and items.
 *Switcher key to change placement type of mountable things to small grid (to place buttons on tables and stuff).
 *Lighted up the game by disabling some features (Main Menu scene and Stationpedia) to reduce memory load at slow pc.
