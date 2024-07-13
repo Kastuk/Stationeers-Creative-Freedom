@@ -6,6 +6,7 @@ using UnityEngine;
 using Assets.Scripts;
 
 using JetBrains.Annotations;
+using System.Reflection;
 
 namespace CreativeFreedom
 {
@@ -46,7 +47,8 @@ namespace CreativeFreedom
             //bool jetpackSwitcher = ;
             if (FreedomConfig.JetpackSwitcher)
             {
-                __instance.defaultJetpackMaxHeight = FreedomConfig.JetpackMaxHeight;
+                //__instance.defaultJetpackMaxHeight = FreedomConfig.JetpackMaxHeight;
+                typeof(MovementController).GetField("defaultJetpackMaxHeight", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(__instance, FreedomConfig.JetpackMaxHeight);
                 //Debug.Log("Jetpack height limit is " + FreedomConfig.JetpackMaxHeight);
             }
         }

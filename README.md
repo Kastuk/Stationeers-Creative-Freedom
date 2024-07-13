@@ -7,16 +7,17 @@ My first attempt for hardmodding the Unity game.
 - unlocked rotation limits (disabled by default, as for now it have problem with smart rotation by *C*)
 - raised jetpack effective height (configurable)
 - changeable mine drilling speed (in config file)
+- can label door sides separately (using particular string in name ("@@" by default), configurable)
 
 Creative Only:
 - spawn menu set to constant scale mode (to fix tiny size on wide screen).
 - spawn completed structures (last build stage)
 - endless jetpack without fumes (no need propellant)
 - speedup jetpack by Shift (like in FuelJetpack mod)
-- endless terrain manipulator, which can place dirt anywhere (unfinished option to place ore and geysers)
+- endless terrain manipulator, which can place dirt anywhere
 - clean built-in nightvision by *N* for any race
-- long burning flares and chemlights
 - bigger range of zoom by FieldOfView keys, can look close at celestal bodies and far structures.
+- can rename any thing by Labeller (walls, wires and characters too)
 
 
 Config for modified limits and switchers will be here (after game load once with the mod):

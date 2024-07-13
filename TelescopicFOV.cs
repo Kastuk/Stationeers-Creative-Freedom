@@ -17,11 +17,14 @@ namespace CreativeFreedom
             [HarmonyPostfix]
             private static void MinMaxFov(CameraController __instance)
             {
-                if (WorldManager.Instance.GameMode == GameMode.Creative)
+                if (FreedomConfig.FOVZoom)
                 {
-                    __instance.MinFoV = 3f; //to not collide with glasses zoom in Survivalities
+                    if (WorldManager.Instance.GameMode == GameMode.Creative)
+                    {
+                        __instance.MinFoV = 3f; //to not collide with glasses zoom in Survivalities
+                    }
+                    __instance.MaxFoV = 160f;
                 }
-                __instance.MaxFoV = 160f;
             }
         }
 
@@ -32,32 +35,36 @@ namespace CreativeFreedom
             [HarmonyPrefix]
             private static bool ModifierKeyZoomPlus(CameraController __instance)
             {
-                bool key = Input.GetKey(KeyCode.RightControl);
-                bool result;
-                if (key)
+                if (FreedomConfig.FOVZoom)
                 {
-                    float num = CameraController.CurrentCamera.fieldOfView;
-                    bool flag = num < __instance.MaxFoV;
-                    if (flag)
+                    bool key = Input.GetKey(KeyCode.RightControl);
+                    bool result;
+                    if (key)
                     {
-                        bool flag2 = num >= __instance.MaxFoV - 6f;
-                        if (flag2)
+                        float num = CameraController.CurrentCamera.fieldOfView;
+                        bool flag = num < __instance.MaxFoV;
+                        if (flag)
                         {
-                            num = __instance.MaxFoV;
+                            bool flag2 = num >= __instance.MaxFoV - 6f;
+                            if (flag2)
+                            {
+                                num = __instance.MaxFoV;
+                            }
+                            else
+                            {
+                                num += 6f;
+                            }
                         }
-                        else
-                        {
-                            num += 6f;
-                        }
+                        CameraController.SetFieldOfView(num);
+                        result = false;
                     }
-                    CameraController.SetFieldOfView(num);
-                    result = false;
+                    else
+                    {
+                        result = true;
+                    }
+                    return result;
                 }
-                else
-                {
-                    result = true;
-                }
-                return result;
+                else return true;
             }
         }
         internal class Camera_FOV_Decrease_Speed
@@ -67,32 +74,36 @@ namespace CreativeFreedom
             [HarmonyPrefix]
             private static bool ModifierKeyZoomMinus(CameraController __instance)
             {
-                bool key = Input.GetKey(KeyCode.RightControl);
-                bool result;
-                if (key)
+                if (FreedomConfig.FOVZoom)
                 {
-                    float num = CameraController.CurrentCamera.fieldOfView;
-                    bool flag = num > __instance.MinFoV;
-                    if (flag)
+                    bool key = Input.GetKey(KeyCode.RightControl);
+                    bool result;
+                    if (key)
                     {
-                        bool flag2 = num <= __instance.MinFoV + 6f;
-                        if (flag2)
+                        float num = CameraController.CurrentCamera.fieldOfView;
+                        bool flag = num > __instance.MinFoV;
+                        if (flag)
                         {
-                            num = __instance.MinFoV;
+                            bool flag2 = num <= __instance.MinFoV + 6f;
+                            if (flag2)
+                            {
+                                num = __instance.MinFoV;
+                            }
+                            else
+                            {
+                                num -= 6f;
+                            }
                         }
-                        else
-                        {
-                            num -= 6f;
-                        }
+                        CameraController.SetFieldOfView(num);
+                        result = false;
                     }
-                    CameraController.SetFieldOfView(num);
-                    result = false;
+                    else
+                    {
+                        result = true;
+                    }
+                    return result;
                 }
-                else
-                {
-                    result = true;
-                }
-                return result;
+                else return true;
             }
         }
     }

@@ -156,7 +156,14 @@ namespace CreativeFreedom
                         //if (asteroid)
                         //{
                         Vector3 localPosition = asteroid.GetLocalPosition(vector);
-                        __instance.CubeWireFrame.BlueprintRenderer.material.color = __instance._canPlaceColor;
+                        //var _color = typeof(VoxelTool).GetField("_canPlaceColor", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(__instance);
+                        //Color iscolor = _color as Color;
+                        Color origcopy = new Color(0f, 1f, 0f, 0.3f);
+
+                        __instance.CubeWireFrame.BlueprintRenderer.material.color = origcopy;
+                        
+
+
                         //}
                         //else
                         //{
@@ -199,7 +206,10 @@ namespace CreativeFreedom
                 //    monob_base.GetMethodNoOverrides<Action<IEnumerator>>(__instance).Invoke(__instance.UseVoxelTool());
                 //    //base.StartCoroutine(__instance.UseVoxelTool());
                 //}
-                if (__instance._usageCoolDown > 0f)// || !__instance.Powered)
+                var _timer = typeof(VoxelTool).GetField("_usageCoolDown", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(__instance);
+                float istimer = (float)_timer;
+
+                if (istimer > 0f)// || !__instance.Powered)
                 {
                     return false;
                 }
@@ -211,12 +221,17 @@ namespace CreativeFreedom
                 //}
                 //Vector3 localPosition = asteroid.GetLocalPosition(vector);
 
-                __instance.PaintVoxel(vector);
+                //__instance.PaintVoxel(vector);
+                var parameters = new object[] { vector };
+                typeof(VoxelTool).GetMethod("PaintVoxel", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(__instance, parameters);//new PrivateMethodClass(), null);
+               
                 //if (GameManager.RunSimulation)
                 //{
                 //    __instance.RemoveDirtFromDirtBag();
                 //}
-                __instance._usageCoolDown = __instance.UsageCooldown;
+                istimer = __instance.UsageCooldown;
+                typeof(VoxelTool).GetField("_usageCoolDown", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(__instance, istimer);
+
 
                 return false;
             }
@@ -254,209 +269,225 @@ namespace CreativeFreedom
     //        //else return true;
     //    }
     //}
+    //[HarmonyPatch] // patch Verse.Widgets.IsPartiallyOrFullyTypedNumber
+    //class VoxelToolCreativeDraw
+    //{
+    //    static System.Reflection.MethodBase TargetMethod()
+    //    {
+    //        // refer to C# reflection documentation:  https://github.com/pardeike/Harmony/issues/121
+    //        return typeof(VoxelTool).GetMethod("PaintVoxel",
+    //                       BindingFlags.NonPublic | BindingFlags.Static).MakeGenericMethod(typeof(Vector3));
+    //    }
+    //    //{ //take from https://github.com/pardeike/Harmony/issues/121
+    //    //    return typeof(VoxelTool)
+    //    //        .GetMethod("PaintVoxel",
+    //    //                   BindingFlags.NonPublic | BindingFlags.Static)
+    //    //        .MakeGenericMethod(typeof(Vector3));
+    //    //}
 
-    [HarmonyPatch(typeof(VoxelTool), nameof(VoxelTool.PaintVoxel))]
-    internal class VoxelToolCreativeDraw
-    {
-        public static GasMixture GeyserMix = new GasMixture();
-        [UsedImplicitly]
-        [HarmonyPrefix]
-        static bool DrawMineablesAndGeysers(VoxelTool __instance, ref Vector3 worldLocation)//, out Vector3 __state)
-        {
-            //__state = worldLocation;
+    //   // public static GasMixture GeyserMix = new GasMixture(); //FIRSTLY fix the geysers exhaust
 
-            if (WorldManager.Instance.GameMode == GameMode.Creative)
-            {
-                // Debug.Log("Voxel tool got creative check in PaintVoxel");
-                //find player slots, check slots, set ore to sculpt by voxel tool
-                Slot slot = __instance.DirtCanisterSlot;
-                GasCanister gascan = slot.Occupant as GasCanister;
-                //lets spawn geysers which spawning gas based on canister contains in VoxelTool slot!
+    //    [UsedImplicitly]
+    //    [HarmonyPrefix]
+    //    static void DrawMineablesAndGeysers(VoxelTool __instance, ref Vector3 worldLocation)//, out Vector3 __state)
+    //    {
+    //        //__state = worldLocation;
 
-                try
-                {
-                    if (gascan && !gascan.IsEmpty)
-                    {
-                        GeyserMix = gascan.InternalAtmosphere.GasMixture;
-                        if (!GeyserMix.IsValid)
-                        {
-                            Debug.Log("GeyserMix is not valid");
-                        }
-                        __instance.VoxelPaintType = MinableType.GeyserHydrogen;
-                    }
-                    Ore oreball = slot.Occupant as Ore;
-                    if (oreball)
-                    {
-                        //Debug.Log("Voxel tool got Ore as slot occupant");
-                        switch (oreball.PrefabName)
-                        {
-                            //switch by thing in canister slot
-                            case "ItemCoalOre":
-                                __instance.VoxelPaintType = MinableType.Coal;
-                                break;
-                            case "ItemIronOre":
-                                __instance.VoxelPaintType = MinableType.Iron;
-                                break;
-                            case "ItemCopperOre":
-                                __instance.VoxelPaintType = MinableType.Copper;
-                                break;
-                            case "ItemSilverOre":
-                                __instance.VoxelPaintType = MinableType.Silver;
-                                break;
-                            case "ItemGoldOre":
-                                __instance.VoxelPaintType = MinableType.Gold;
-                                break;
-                            case "ItemLeadOre":
-                                __instance.VoxelPaintType = MinableType.Lead;
-                                break;
-                            case "ItemNickelOre":
-                                __instance.VoxelPaintType = MinableType.Nickel;
-                                break;
-                            case "ItemUraniumOre":
-                                __instance.VoxelPaintType = MinableType.Uranium;
-                                break;
-                            case "ItemSiliconOre":
-                                __instance.VoxelPaintType = MinableType.Silicon;
-                                break;
-                            case "ItemCobaltOre":
-                                __instance.VoxelPaintType = MinableType.Cobalt;
-                                break;
-                            //must give a way to set ice without melting
-                            //disable melting at creative mode? Problems for experiments
-                            case "ItemIce":
-                            case "ItemPureIce":
-                            case "ItemPureIceSteam":
-                                __instance.VoxelPaintType = MinableType.Ice;
-                                break;
-                            case "ItemVolatiles":
-                            case "ItemPureIceVolatiles":
-                            case "ItemPureIceLiquidVolatiles":
-                                __instance.VoxelPaintType = MinableType.Volatiles;
-                                break;
-                            case "ItemOxite":
-                            case "ItemPureIceOxygen":
-                            case "ItemPureIceLiquidOxygen":
-                                __instance.VoxelPaintType = MinableType.Oxite;
-                                break;
-                            case "ItemNitrice":
-                            case "ItemPureIceNitrogen":
-                            case "ItemPureIceNitrous":
-                            case "ItemPureIceLiquidNitrogen":
-                            case "ItemPureIceLiquidNitrous":
-                                __instance.VoxelPaintType = MinableType.Nitrice;
-                                break;
+    //        if (WorldManager.Instance.GameMode == GameMode.Creative)
+    //        {
+    //            // Debug.Log("Voxel tool got creative check in PaintVoxel");
+    //            //find player slots, check slots, set ore to sculpt by voxel tool
+    //            Slot slot = __instance.DirtCanisterSlot;
+    //            // GasCanister gascan = slot.Occupant as GasCanister; //FIRSTLY fix the geysers exhaust
+    //            //lets spawn geysers which spawning gas based on canister contains in VoxelTool slot!
 
-                            default:
-                                __instance.VoxelPaintType = MinableType.Stone;
-                                break;
-                        }
-                    }
-                }
+    //            try
+    //            {
+    //                //if (gascan && !gascan.IsEmpty)  //FIRSTLY fix the geysers exhaust
+    //                //{
+    //                //    GeyserMix = gascan.InternalAtmosphere.GasMixture;
+    //                //    if (!GeyserMix.IsValid)
+    //                //    {
+    //                //        Debug.Log("GeyserMix is not valid");
+    //                //    }
+    //                //    __instance.VoxelPaintType = MinableType.GeyserHydrogen;
+    //                //}
+    //                Ore oreball = slot.Occupant as Ore;
+    //                if (oreball)
+    //                {
+    //                    //Debug.Log("Voxel tool got Ore as slot occupant");
+    //                    switch (oreball.PrefabName)
+    //                    {
+    //                        //switch by thing in canister slot
+    //                        case "ItemCoalOre":
+    //                            __instance.VoxelPaintType = MinableType.Coal;
+    //                            break;
+    //                        case "ItemIronOre":
+    //                            __instance.VoxelPaintType = MinableType.Iron;
+    //                            break;
+    //                        case "ItemCopperOre":
+    //                            __instance.VoxelPaintType = MinableType.Copper;
+    //                            break;
+    //                        case "ItemSilverOre":
+    //                            __instance.VoxelPaintType = MinableType.Silver;
+    //                            break;
+    //                        case "ItemGoldOre":
+    //                            __instance.VoxelPaintType = MinableType.Gold;
+    //                            break;
+    //                        case "ItemLeadOre":
+    //                            __instance.VoxelPaintType = MinableType.Lead;
+    //                            break;
+    //                        case "ItemNickelOre":
+    //                            __instance.VoxelPaintType = MinableType.Nickel;
+    //                            break;
+    //                        case "ItemUraniumOre":
+    //                            __instance.VoxelPaintType = MinableType.Uranium;
+    //                            break;
+    //                        case "ItemSiliconOre":
+    //                            __instance.VoxelPaintType = MinableType.Silicon;
+    //                            break;
+    //                        case "ItemCobaltOre":
+    //                            __instance.VoxelPaintType = MinableType.Cobalt;
+    //                            break;
+    //                        //must give a way to set ice without melting
+    //                        //disable melting at creative mode? Problems for experiments
+    //                        case "ItemIce":
+    //                        case "ItemPureIce":
+    //                        case "ItemPureIceSteam":
+    //                            __instance.VoxelPaintType = MinableType.Ice;
+    //                            break;
+    //                        case "ItemVolatiles":
+    //                        case "ItemPureIceVolatiles":
+    //                        case "ItemPureIceLiquidVolatiles":
+    //                            __instance.VoxelPaintType = MinableType.Volatiles;
+    //                            break;
+    //                        case "ItemOxite":
+    //                        case "ItemPureIceOxygen":
+    //                        case "ItemPureIceLiquidOxygen":
+    //                            __instance.VoxelPaintType = MinableType.Oxite;
+    //                            break;
+    //                        case "ItemNitrice":
+    //                        case "ItemPureIceNitrogen":
+    //                        case "ItemPureIceNitrous":
+    //                        case "ItemPureIceLiquidNitrogen":
+    //                        case "ItemPureIceLiquidNitrous":
+    //                            __instance.VoxelPaintType = MinableType.Nitrice;
+    //                            break;
 
-                catch (Exception e)
-                {
-                    Debug.Log("Error at VoxelTool.PaintVoxel: " + e.ToString());
-                }
-                return true;
-            }
-            return false;
-        }
-        //if (__instance.VoxelPaintType == MinableType.Stone)
-        //{
-        //    return true;
-        //}
-        [HarmonyPostfix]
-        static void SetMineableVoxel(VoxelTool __instance, Vector3 __state)
-        {
-            //find a way to run vizualizer of mineables like in deserializing of asteroids or something
-            //as only after saveload mineables is appear properly
-            //except geysers, which not give any gas
+    //                        default:
+    //                            __instance.VoxelPaintType = MinableType.Stone;
+    //                            break;
+    //                    }
+    //                }
+    //            }
 
-            Vector3 worldLocation = __state;
-            if (__instance.VoxelPaintType <= MinableType.Stone || __state == null)
-            {
-                return;
-            }
+    //            catch (Exception e)
+    //            {
+    //                Debug.Log("Error at VoxelTool.PaintVoxel: " + e.ToString());
+    //            }
+    //            //return;
+    //        }
+    //        //return false;
+    //    }
+    //    //if (__instance.VoxelPaintType == MinableType.Stone)
+    //    //{
+    //    //    return true;
+    //    //}
+    //    [HarmonyPostfix]
+    //    static void SetMineableVoxel(VoxelTool __instance, Vector3 __state)
+    //    {
+    //        if (WorldManager.Instance.GameMode == GameMode.Creative)
+    //        {
+    //            //find a way to run vizualizer of mineables like in deserializing of asteroids or something
+    //            //as only after saveload mineables is appear properly
+    //            //except geysers, which not give any gas
 
-            Asteroid asteroid = ChunkController.World.GetChunk(worldLocation) as Asteroid;
-            if (asteroid)
-            {
-                ChunkController.World.Register(asteroid);
-                
-                //Debug.Log("Asteroid params: " + asteroid.name + ", " + asteroid.IsInitialized);
-                //Minables mineable = asteroid.GetMineable(worldLocation);
-                //if (mineable != null)
-                //{
-                //    Debug.Log("Mineable params: " + mineable.IsMineable + ", " + mineable.VoxelType);
-                //    return false;
-                //}
-                //asteroid.PopulateMinable(worldLocation, __instance.VoxelPaintType);
+    //            Vector3 worldLocation = __state;
+    //        if (__instance.VoxelPaintType <= MinableType.Stone || __state == null)
+    //        {
+    //            return;
+    //        }
 
-                //Minables mineable = asteroid.GetMineable(worldLocation);
-                //if (mineable != null)
-                //{
-                //    if (mineable.VoxelType == __instance.VoxelPaintType)
-                //    {
-                //        return false;
-                //    }
-                //    asteroid._allMineables.Remove(mineable.Position); //this may be out of bounds if mineable is not in dictionary allmineables
-                //}
-                try
-                {
-                    Minables minables = new Minables(MiningManager.FindMineableType(__instance.VoxelPaintType), worldLocation * ChunkObject.VoxelSize + asteroid.Position, asteroid)
-                    {
-                        LocalPosition = BitConverter.GetBytes(asteroid.ChunkController.Vector2Offset[(int)worldLocation.x, (int)worldLocation.y, (int)worldLocation.z])
-                    };
-                    //if (!asteroid._allMineables.ContainsKey(worldLocation))
-                    //{
-                    //    asteroid._allMineables.Add(worldLocation, minables);
-                    //}
-                    asteroid.VoxelVisual[(int)BitConverter.ToInt16(minables.LocalPosition, 0)] = true;
-                    asteroid.SetMineableRenderers(true);
-                    //asteroid._allMineables[worldLocation] = minables; //THERE?
-                    //PROBLEM is it got out of bounds cause that chunk already filled?
+    //        Asteroid asteroid = ChunkController.World.GetChunk(worldLocation) as Asteroid;
+    //            if (asteroid)
+    //            {
+    //                ChunkController.World.Register(asteroid);
 
-                    MineableObject mineableVisualiser = MiningManager.Instance.GetMineableVisualiser(minables.VoxelType, minables.Position);
-                    if (mineableVisualiser)
-                    {
-                        mineableVisualiser.SetVisible(true);
-                        asteroid.MineableVisualizers.Add(minables.Position.ToGrid(1f, 0f), mineableVisualiser);
-                    }
+    //                //Debug.Log("Asteroid params: " + asteroid.name + ", " + asteroid.IsInitialized);
+    //                //Minables mineable = asteroid.GetMineable(worldLocation);
+    //                //if (mineable != null)
+    //                //{
+    //                //    Debug.Log("Mineable params: " + mineable.IsMineable + ", " + mineable.VoxelType);
+    //                //    return false;
+    //                //}
+    //                //asteroid.PopulateMinable(worldLocation, __instance.VoxelPaintType);
 
-                    MeshRenderer meshRenderer;
-                    MiningManager.MineableGoggleVisualizers.TryGetValue(minables, out meshRenderer);
-                    Mesh mesh = null;
-                    Material material = null;
-                    if (meshRenderer != null)
-                    {
-                        MeshFilter component = meshRenderer.GetComponent<MeshFilter>();
-                        mesh = ((component != null) ? component.sharedMesh : null);
-                        material = meshRenderer.sharedMaterial;
-                    }
-                    InstancedIndirectDrawCall instancedIndirectDrawCall;
-                    if (mesh == null || material == null)
-                    {
-                        instancedIndirectDrawCall = InstancedIndirectDrawCall.FindOrAddDrawCall(asteroid.MineableVisualizerDrawCalls, MiningManager.Instance.defaultMineableVisualizerMaterial, MiningManager.Instance.defaultMineableVisualizerMesh, 0, 0);
-                    }
-                    else
-                    {
-                        instancedIndirectDrawCall = InstancedIndirectDrawCall.FindOrAddDrawCall(asteroid.MineableVisualizerDrawCalls, material, mesh, 0, 0);
-                    }
-                    Matrix4x4 matrix4x = Matrix4x4.TRS(minables.Position, Quaternion.identity, new Vector3(1f, 1f, 1f));
-                    minables.InstancedIndirectDrawCall = instancedIndirectDrawCall;
-                    minables.VisualizerTransformMatrix = matrix4x;
-                    instancedIndirectDrawCall.AddInstance(matrix4x);
+    //                //Minables mineable = asteroid.GetMineable(worldLocation);
+    //                //if (mineable != null)
+    //                //{
+    //                //    if (mineable.VoxelType == __instance.VoxelPaintType)
+    //                //    {
+    //                //        return false;
+    //                //    }
+    //                //    asteroid._allMineables.Remove(mineable.Position); //this may be out of bounds if mineable is not in dictionary allmineables
+    //                //}
+    //                try
+    //                {
+    //                    Minables minables = new Minables(MiningManager.FindMineableType(__instance.VoxelPaintType), worldLocation * ChunkObject.VoxelSize + asteroid.Position, asteroid)
+    //                    {
+    //                        LocalPosition = BitConverter.GetBytes(asteroid.ChunkController.Vector2Offset[(int)worldLocation.x, (int)worldLocation.y, (int)worldLocation.z])
+    //                    };
+    //                    //if (!asteroid._allMineables.ContainsKey(worldLocation))
+    //                    //{
+    //                    //    asteroid._allMineables.Add(worldLocation, minables);
+    //                    //}
+    //                    asteroid.VoxelVisual[(int)BitConverter.ToInt16(minables.LocalPosition, 0)] = true;
+    //                    asteroid.SetMineableRenderers(true);
+    //                    //asteroid._allMineables[worldLocation] = minables; //THERE?
+    //                    //PROBLEM is it got out of bounds cause that chunk already filled?
+
+    //                    MineableObject mineableVisualiser = MiningManager.Instance.GetMineableVisualiser(minables.VoxelType, minables.Position);
+    //                    if (mineableVisualiser)
+    //                    {
+    //                        mineableVisualiser.SetVisible(true);
+    //                        asteroid.MineableVisualizers.Add(minables.Position.ToGrid(1f, 0f), mineableVisualiser);
+    //                    }
+
+    //                    MeshRenderer meshRenderer;
+    //                    MiningManager.MineableGoggleVisualizers.TryGetValue(minables, out meshRenderer);
+    //                    Mesh mesh = null;
+    //                    Material material = null;
+    //                    if (meshRenderer != null)
+    //                    {
+    //                        MeshFilter component = meshRenderer.GetComponent<MeshFilter>();
+    //                        mesh = ((component != null) ? component.sharedMesh : null);
+    //                        material = meshRenderer.sharedMaterial;
+    //                    }
+    //                    InstancedIndirectDrawCall instancedIndirectDrawCall;
+    //                    if (mesh == null || material == null)
+    //                    {
+    //                        instancedIndirectDrawCall = InstancedIndirectDrawCall.FindOrAddDrawCall(asteroid.MineableVisualizerDrawCalls, MiningManager.Instance.defaultMineableVisualizerMaterial, MiningManager.Instance.defaultMineableVisualizerMesh, 0, 0);
+    //                    }
+    //                    else
+    //                    {
+    //                        instancedIndirectDrawCall = InstancedIndirectDrawCall.FindOrAddDrawCall(asteroid.MineableVisualizerDrawCalls, material, mesh, 0, 0);
+    //                    }
+    //                    Matrix4x4 matrix4x = Matrix4x4.TRS(minables.Position, Quaternion.identity, new Vector3(1f, 1f, 1f));
+    //                    minables.InstancedIndirectDrawCall = instancedIndirectDrawCall;
+    //                    minables.VisualizerTransformMatrix = matrix4x;
+    //                    instancedIndirectDrawCall.AddInstance(matrix4x);
 
 
-                    asteroid.SetMineableRenderers(true);
-                }
-                catch (Exception e)
-                {
-                    Debug.Log("error at custom populate mineable: " + e.ToString());
-                }
-            }
-        }
-    }
+    //                    asteroid.SetMineableRenderers(true);
+    //                }
+    //                catch (Exception e)
+    //                {
+    //                    Debug.Log("Error at custom populate mineable: " + e.ToString());
+    //                }
+    //            }
+    //        }
+    //    }
+    //}
 
     //    //TODO: Create asteroid!
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Reflection;
 
 using BepInEx;
 using HarmonyLib;
@@ -31,6 +32,26 @@ namespace CreativeFreedom
 {
     class Lights
     {
+        [HarmonyPatch(typeof(Headlamp), nameof(Headlamp.SetCustomColor))]
+        public static class ColoredLight
+        {
+            //[HarmonyPatch(nameof(StackableLight.Awake))]
+            [UsedImplicitly]
+            [HarmonyPostfix]
+            public static void ColoredHeadSpotLight(Headlamp __instance)
+            {
+                if (FreedomConfig.ColoredLight)
+                {
+                    foreach (ThingLight thingLight in __instance.Lights)
+                    {
+                        thingLight.Light.color = __instance.CustomColor.Light;
+                    }
+                }
+            }
+        }
+
+
+
         [HarmonyPatch(typeof(CameraController), nameof(CameraController.ManagerAwake))]
         public static class WhiteNV
         {
@@ -69,7 +90,7 @@ namespace CreativeFreedom
             }
         }
 
-        [HarmonyPatch(typeof(Human), nameof(Human.UpdateNightVision))]
+        [HarmonyPatch(typeof(Human), "UpdateNightVision")] //private now?
         public static class CreativeNightVision2
         {
             //[HarmonyPatch(nameof(StackableLight.Awake))]
@@ -132,20 +153,22 @@ namespace CreativeFreedom
         //    }
         //}
         //not sure why cannot change same for ChemLight
-        [HarmonyPatch(typeof(StackableLight),nameof(StackableLight.Awake))]
-        public static class CreativeAllStackingLights
-        {
-            //[HarmonyPatch(nameof(StackableLight.Awake))]
-            [UsedImplicitly]
-            [HarmonyPostfix]
-            public static void LongBurn(StackableLight __instance)
-            {
-                if (WorldManager.Instance.GameMode == GameMode.Creative)
-                {
-                    __instance._actualLifetime = 5000f;
-                    __instance.ActualLifetime = 5000f;
-                }
-            }
-        }
+        //[HarmonyPatch(typeof(StackableLight),nameof(StackableLight.Awake))]
+        //public static class CreativeAllStackingLights
+        //{
+        //    //[HarmonyPatch(nameof(StackableLight.Awake))]
+        //    [UsedImplicitly]
+        //    [HarmonyPostfix]
+        //    public static void LongBurn(StackableLight __instance)
+        //    {
+        //        if (WorldManager.Instance.GameMode == GameMode.Creative)
+        //        {
+        //            //__instance._actualLifetime = 5000f;
+        //            typeof(StackableLight).GetField("_actualLifetime", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(__instance, 5000f);
+
+        //            __instance.ActualLifetime = 5000f;
+        //        }
+        //    }
+        //}
     }
 }

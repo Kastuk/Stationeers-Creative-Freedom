@@ -23,7 +23,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <LangVersion>7.3</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -39,13 +39,13 @@
     <Reference Include="0Harmony20">
       <HintPath>E:\SteamLibrary\steamapps\common\Stationeers\BepInEx\core\0Harmony20.dll</HintPath>
     </Reference>
+    <Reference Include="Assembly-CSharp, Version=0.2.4945.22425, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>E:\SteamLibrary\steamapps\common\Stationeers\rocketstation_Data\Managed\Assembly-CSharp.dll</HintPath>
+    </Reference>
     <Reference Include="Assembly-CSharp-firstpass, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>E:\SteamLibrary\steamapps\common\Stationeers\rocketstation_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
-    </Reference>
-    <Reference Include="Assembly-CSharp-Publicized, Version=0.2.4801.21903, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>E:\SteamLibrary\steamapps\common\Stationeers\rocketstation_Data\Managed\AssemblyPublicizer\Delivery\Assembly-CSharp-Publicized.dll</HintPath>
     </Reference>
     <Reference Include="BepInEx, Version=5.4.5.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -89,9 +89,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>E:\SteamLibrary\steamapps\common\Stationeers\rocketstation_Data\Managed\UnityEngine.InputLegacyModule.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.InputModule">
-      <HintPath>..\..\Libraries\UnityEngine.InputModule.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEngine.PhysicsModule">
       <HintPath>..\..\Libraries\UnityEngine.PhysicsModule.dll</HintPath>
     </Reference>
@@ -112,6 +109,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="JetpackMods.cs" />
+    <Compile Include="LabellerPlus.cs" />
     <Compile Include="Lights.cs" />
     <Compile Include="MaxBuildStateAndOther.cs" />
     <Compile Include="Mining.cs" />
@@ -119,7 +117,7 @@
     <Compile Include="BreakConstructionLimits.cs" />
     <Compile Include="PatchAndConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="VisualStuff.cs" />
+    <Compile Include="DecorStuff.cs" />
     <Compile Include="VoxelToolCreative.cs" />
   </ItemGroup>
   <ItemGroup>

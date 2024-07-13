@@ -63,7 +63,8 @@ namespace CreativeFreedom //copy from dnSpy DECOMPILED last version as I lost la
     //}
 
 
-    [HarmonyPatch(typeof(Structure),nameof(Structure.Awake))]
+    [HarmonyPatch(typeof(Structure),nameof(Structure.Awake))] //need a way to change param right at building cursor state
+    //need try transpiler patching inside methods of InvenotoryManager
     
     public static class Structure_Rotation_Unlock
     {
@@ -77,6 +78,11 @@ namespace CreativeFreedom //copy from dnSpy DECOMPILED last version as I lost la
                 __instance.RotationAxis = RotationAxis.All; //thanks for Kamuchi for idea of using the named enumerator values
                 __instance.AllowedRotations = AllowedRotations.All;
             }
+            //Limit rotations for smartrotation
+
+            //TODO add rotationcheck somewhere at placement mode when construction checks is come
+            //learn transpiller
+
             //TODO key switcher to change precisement of constructions
             //__instance.GridSize = 0.5f; 
             //__instance.PlacementType = PlacementSnap.Grid;
@@ -90,23 +96,25 @@ namespace CreativeFreedom //copy from dnSpy DECOMPILED last version as I lost la
         [HarmonyPostfix]
         public static void SkipCanConstruct(ref CanConstructInfo __result)
         {
-            __result = CanConstructInfo.ValidPlacement;
+            if (FreedomConfig.UnlockCollisions || Input.GetKey(BindValidate.HoldLimitsKey))
+            {
+                __result = CanConstructInfo.ValidPlacement;
+            }
         }
     }
-        //[HarmonyPatch(typeof(Structure))]
-        //[HarmonyPatch("CanConstructCell")]
-        //internal class Structure_Cell_Unlock
-        //{
-        //    [UsedImplicitly]
-        //    [HarmonyPostfix]
-        //    private static void LetBuildInAnyCell(ref CanConstructInfo __result)
-        //    {
-        //        if (FreedomConfig.SkipBlockedGrid)
-        //        {
-        //            __result = CanConstructInfo.ValidPlacement;
-        //        }
-        //    }
-        //}
+    //[HarmonyPatch(typeof(GridController), nameof(GridController.IsBlockedGrid), new[] { typeof(WorldGrid)})]
+    //internal class GridController_Unblock_Grid
+    //{
+    //    [UsedImplicitly]
+    //    [HarmonyPostfix]
+    //    private static void ThisGridNotBlocked(ref bool __result)
+    //    {
+    //        if (FreedomConfig.SkipBlockedGrid)
+    //        {
+    //            __result = false;
+    //        }
+    //    }
+    //}
 
     [HarmonyPatch(typeof(CanConstructInfo),nameof(CanConstructInfo.CanConstruct), MethodType.Getter)]
     public static class CanConstructInfo_CanConstruct_Getter
@@ -116,7 +124,10 @@ namespace CreativeFreedom //copy from dnSpy DECOMPILED last version as I lost la
         [UsedImplicitly]
         public static void ReturnCanConstructTrue(ref bool __result)
         {
-            __result = true;
+            if (FreedomConfig.UnlockCollisions || Input.GetKey(BindValidate.HoldLimitsKey))
+            {
+                __result = true;
+            }
         }
     }
 
@@ -127,13 +138,15 @@ namespace CreativeFreedom //copy from dnSpy DECOMPILED last version as I lost la
         [UsedImplicitly]
         public static void CanConstructInfoTrue(ref CanConstructInfo __result)
         {
-
-            __result = new CanConstructInfo(true, string.Empty); //THANKS to proud2belamer (sth64) for this addition to reanimate this mod!
-            return;
+            if (FreedomConfig.UnlockCollisions || Input.GetKey(BindValidate.HoldLimitsKey))
+            {
+                __result = new CanConstructInfo(true, string.Empty); //THANKS to proud2belamer (sth64) for this addition to reanimate this mod!
+                return;
+            }
         }
     }
 
-    
+
     //NOT WORK, still error at load and removing of colliding structures!!!
 
     //THIS MUST disable autoremoving (at game load) of collising frames and other full-grid things, like merged cladding.
@@ -170,23 +183,26 @@ namespace CreativeFreedom //copy from dnSpy DECOMPILED last version as I lost la
     //    }
     //}
 
-   
+
 
 
     #endregion Structure
 
     #region SmallGrid
 
-    //[HarmonyPatch(typeof(SmallGrid), "CanConstruct")]
-    //internal class SmallGrid_CanConstruct_Patch
-    //{
-    //    private static void Postfix(ref CanConstructInfo __result)
-    //    {
-    //        __result = CanConstructInfo.ValidPlacement;
-    //    }
-    //}
+    [HarmonyPatch(typeof(SmallGrid), "CanConstruct")]
+    internal class SmallGrid_CanConstruct_Patch
+    {
+        private static void Postfix(ref CanConstructInfo __result)
+        {
+            if (FreedomConfig.UnlockCollisions || Input.GetKey(BindValidate.HoldLimitsKey))
+            {
+                __result = CanConstructInfo.ValidPlacement;
+            }
+        }
+    }
 
-    [HarmonyPatch(typeof(SmallGrid),nameof(SmallGrid._IsCollision))]
+    [HarmonyPatch(typeof(SmallGrid),"_IsCollision")]
 
     public static class SmallGrid_isCollision_False
     {
@@ -194,7 +210,10 @@ namespace CreativeFreedom //copy from dnSpy DECOMPILED last version as I lost la
         [UsedImplicitly]
         public static void Postfix(ref bool __result)
         {
-            __result = false;
+            if (FreedomConfig.UnlockCollisions || Input.GetKey(BindValidate.HoldLimitsKey))
+            {
+                __result = false;
+            }
             //return false;
         }
     }
@@ -205,7 +224,10 @@ namespace CreativeFreedom //copy from dnSpy DECOMPILED last version as I lost la
         [UsedImplicitly]
         public static void Postfix(ref bool __result)
         {
-            __result = true;
+            if (FreedomConfig.UnlockCollisions || Input.GetKey(BindValidate.HoldLimitsKey))
+            {
+                __result = true;
+            }
         }
     }
 
@@ -215,7 +237,10 @@ namespace CreativeFreedom //copy from dnSpy DECOMPILED last version as I lost la
         [UsedImplicitly]
         public static void Postfix(ref bool __result)
         {
-            __result = true;
+            if (FreedomConfig.UnlockCollisions || Input.GetKey(BindValidate.HoldLimitsKey))
+            {
+                __result = true;
+            }
         }
     }
 
@@ -226,7 +251,10 @@ namespace CreativeFreedom //copy from dnSpy DECOMPILED last version as I lost la
         [UsedImplicitly]
         private static void Postfix(ref CanMountResult __result)
         {
-            __result.result = WallMountResult.Valid;
+            if (FreedomConfig.UnlockCollisions || Input.GetKey(BindValidate.HoldLimitsKey))
+            {
+                __result.result = WallMountResult.Valid;
+            }
         }
         //thanks to the TurkeyKittin.
     }
