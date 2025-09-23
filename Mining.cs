@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using HarmonyLib;
 using JetBrains.Annotations;
 using UnityEngine;
@@ -33,13 +33,15 @@ namespace CreativeFreedom
     class Mining
     {
 
-            [HarmonyPatch(typeof(MiningDrill), "OnUsePrimary")]
+            [HarmonyPatch(typeof(MiningDrill), nameof(MiningDrill.Awake))]
         internal class MiningDrill_Speedup
         {
             [UsedImplicitly]
             private static void Prefix(MiningDrill __instance)
             {
-                __instance.MineCompletionTime = FreedomConfig.MineCompletionTime.Value;
+//if creative mode? 
+//TODO Add dict of orig values and modify them instead of replace
+                __instance.MineCompletionTime *= FreedomConfig.MineCompletionTime.Value;
                 //float time = Mathf.Clamp(__instance.MineCompletionTime, 0.08f, 0.5f);
                 //__instance.MineCompletionTime = time;
             }

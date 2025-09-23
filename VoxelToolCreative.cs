@@ -53,6 +53,8 @@ using Assets.Scripts.Serialization;
 
 using UnityEngine.UI;
 
+using TerrainSystem;
+
 
 namespace CreativeFreedom
 {
@@ -142,36 +144,63 @@ namespace CreativeFreedom
 
                 if (__instance.OnOff)// && __instance.Powered)
                 {
-                    // Debug.Log("Voxel tool got On in LateUpdate");
-                    if (InventoryManager.ActiveHandSlot != null && InventoryManager.ActiveHandSlot.Occupant == __instance)
+                    Slot activeHandSlot = InventoryManager.ActiveHandSlot;
+                    long? num;
+                    if (activeHandSlot == null)
+                    {
+                        num = null;
+                    }
+                    else
+                    {
+                        DynamicThing occupant = activeHandSlot.Occupant;
+                        num = ((occupant != null) ? new long?(occupant.ReferenceId) : null);
+                    }
+                    long? num2 = num;
+                    long referenceId = __instance.ReferenceId;
+                    if ((num2.GetValueOrDefault() == referenceId) & (num2 != null))
                     {
                         if (!__instance.VoxelBlueprint.gameObject.activeSelf)
                         {
                             __instance.VoxelBlueprint.gameObject.SetActive(true);
                         }
-                        // Vector3 vector = (__instance.AllowForwardCursor ? CursorManager.CursorPositionForward : CursorManager.CursorPlanePosition).ToGrid(1f, 0f).ToVector3();
-                        Vector3 vector = CursorManager.CursorPositionForward.ToGrid(1f, 0f).ToVector3();
+                        Vector3 vector = (__instance.AllowForwardCursor ? CursorManager.CursorPositionForward : CursorManager.CursorPlanePosition).ToGrid(1f, 0f).ToVector3();
 
-                        Asteroid asteroid = ChunkController.World.GetChunk(vector) as Asteroid;
-                        //if (asteroid)
-                        //{
-                        Vector3 localPosition = asteroid.GetLocalPosition(vector);
-                        //var _color = typeof(VoxelTool).GetField("_canPlaceColor", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(__instance);
-                        //Color iscolor = _color as Color;
-                        Color origcopy = new Color(0f, 1f, 0f, 0.3f);
-
-                        __instance.CubeWireFrame.BlueprintRenderer.material.color = origcopy;
-                        
-
-
-                        //}
-                        //else
-                        //{
-                        //    __instance.CubeWireFrame.BlueprintRenderer.material.color = __instance._cantPlaceColor;
-                        //}
+                        //float densityWorldSpace = VoxelTerrain.GetDensityWorldSpace(vector);
+                        __instance.CubeWireFrame.BlueprintRenderer.material.color = new Color(0f, 1f, 0f, 0.3f);
                         __instance.VoxelBlueprint.transform.position = vector;
                         return false;
                     }
+
+                    //// Debug.Log("Voxel tool got On in LateUpdate");
+                    //if (InventoryManager.ActiveHandSlot != null && InventoryManager.ActiveHandSlot.Occupant == __instance)
+                    //{
+                    //    if (!__instance.VoxelBlueprint.gameObject.activeSelf)
+                    //    {
+                    //        __instance.VoxelBlueprint.gameObject.SetActive(true);
+                    //    }
+                    //    // Vector3 vector = (__instance.AllowForwardCursor ? CursorManager.CursorPositionForward : CursorManager.CursorPlanePosition).ToGrid(1f, 0f).ToVector3();
+                    //    Vector3 vector = CursorManager.CursorPositionForward.ToGrid(1f, 0f).ToVector3();
+
+                    //    //Asteroid asteroid = ChunkController.World.GetChunk(vector) as Asteroid;
+                    //    //if (asteroid)
+                    //    //{
+                    //    //Vector3 localPosition = asteroid.GetLocalPosition(vector);
+                    //    //var _color = typeof(VoxelTool).GetField("_canPlaceColor", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(__instance);
+                    //    //Color iscolor = _color as Color;
+                    //    Color origcopy = new Color(0f, 1f, 0f, 0.3f);
+
+                    //    __instance.CubeWireFrame.BlueprintRenderer.material.color = origcopy;
+                        
+
+
+                    //    //}
+                    //    //else
+                    //    //{
+                    //    //    __instance.CubeWireFrame.BlueprintRenderer.material.color = __instance._cantPlaceColor;
+                    //    //}
+                    //    __instance.VoxelBlueprint.transform.position = vector;
+                    //    return false;
+                    //}
                 }
                 if (__instance.VoxelBlueprint.gameObject.activeSelf)
                 {
@@ -213,7 +242,7 @@ namespace CreativeFreedom
                 {
                     return false;
                 }
-                Vector3 vector = targetLocation.GridCenter(1f, 0f);
+                //Vector3 vector = targetLocation.GridCenter(1f, 0f);
                 //Asteroid asteroid = ChunkController.World.GetChunk(vector) as Asteroid;
                 //if (!asteroid)
                 //{
@@ -222,15 +251,21 @@ namespace CreativeFreedom
                 //Vector3 localPosition = asteroid.GetLocalPosition(vector);
 
                 //__instance.PaintVoxel(vector);
-                var parameters = new object[] { vector };
-                typeof(VoxelTool).GetMethod("PaintVoxel", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(__instance, parameters);//new PrivateMethodClass(), null);
-               
+                //var parameters = new object[] { vector };
+                //typeof(VoxelTool).GetMethod("PaintVoxel", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(__instance, parameters);//new PrivateMethodClass(), null);
+
+                if (VoxelTerrain.GetDensityWorldSpace(targetLocation) > 0.78431374f)
+                {
+                    return false;
+                }
+                OnServer.PlaceVoxelAtWorldPosition(__instance.ReferenceId, targetLocation, VoxelNodeType.Dirt);
+
                 //if (GameManager.RunSimulation)
                 //{
                 //    __instance.RemoveDirtFromDirtBag();
                 //}
                 istimer = __instance.UsageCooldown;
-                typeof(VoxelTool).GetField("_usageCoolDown", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(__instance, istimer);
+                //typeof(VoxelTool).GetField("_usageCoolDown", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(__instance, istimer);
 
 
                 return false;

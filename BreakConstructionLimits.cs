@@ -61,42 +61,167 @@ namespace CreativeFreedom //copy from dnSpy DECOMPILED last version as I lost la
 
     //    }
     //}
+    [HarmonyPatch(typeof(InventoryManager), nameof(InventoryManager.ManagerUpdate))] //need a way to change param right at building cursor state
+                                                                                     //need try transpiler patching inside methods of InvenotoryManager
 
-
-    [HarmonyPatch(typeof(Structure),nameof(Structure.Awake))] //need a way to change param right at building cursor state
-    //need try transpiler patching inside methods of InvenotoryManager
-    
-    public static class Structure_Rotation_Unlock
+    public static class Place_for_reverse_patch_call
     {
         //[HarmonyPatch("Awake")]
         [UsedImplicitly]//dunno what is for, something for simpler replacing of the field values.
-        [HarmonyPostfix]
-        public static void LetAnyRotation(Structure __instance)
+        [HarmonyPrefix]
+        public static void LetsCallReversePatchIntoPlacementMode()
         {
-            if (FreedomConfig.UnlockRotations)
-            {
-                __instance.RotationAxis = RotationAxis.All; //thanks for Kamuchi for idea of using the named enumerator values
-                __instance.AllowedRotations = AllowedRotations.All;
-            }
-            //Limit rotations for smartrotation
+            //RotationAxis state = RotationAxis.All;
+            ReversedPatchIntoPrivateMethod.AllowedAtStart();
 
-            //TODO add rotationcheck somewhere at placement mode when construction checks is come
-            //learn transpiller
-
-            //TODO key switcher to change precisement of constructions
-            //__instance.GridSize = 0.5f; 
-            //__instance.PlacementType = PlacementSnap.Grid;
         }
     }
 
+    public class ReversedPatchIntoPrivateMethod
+    {
+        [HarmonyReversePatch]
+        [HarmonyPatch(typeof(InventoryManager), "PlacementMode")]
+        //[HarmonyPrefix] //cannot be both reverse and pre\postfix
+        public static void AllowedAtStart()
+        {
+            RotationAxis state;// = RotationAxis.All;
+            if (InventoryManager.ConstructionCursor)
+            {
+                state = InventoryManager.ConstructionCursor.RotationAxis;
+
+                if (FreedomConfig.UnlockRotations || Input.GetKey(CreativeFreedom.UnlimitHold) || CheckKeysPressed.UnSwitch)
+                {
+
+                    InventoryManager.ConstructionCursor.RotationAxis = RotationAxis.All;
+
+                }
+                else
+                {
+                    InventoryManager.ConstructionCursor.RotationAxis = state;
+                }
+            }
+        }
+    }
+
+
+    [HarmonyPatch(typeof(InventoryManager), nameof(InventoryManager.UpdatePlacement), new Type[] {typeof(Structure)})] //need a way to change param right at building cursor state
+                                                                                       //need try transpiler patching inside methods of InvenotoryManager
+
+    public static class Structure_Rotation_Unlock_at_placement
+    {
+        //[HarmonyPatch("Awake")]
+        [UsedImplicitly]//dunno what is for, something for simpler replacing of the field values.
+        [HarmonyPrefix]
+        public static void LetAnyRotationByKey(out AllowedRotations __state)
+        {
+            __state = AllowedRotations.All;
+            if (InventoryManager.ConstructionCursor)
+            {
+                __state = InventoryManager.ConstructionCursor.AllowedRotations;
+
+                if (FreedomConfig.UnlockRotations || Input.GetKey(CreativeFreedom.UnlimitHold) || CheckKeysPressed.UnSwitch) //not works yet!
+                {
+                    InventoryManager.ConstructionCursor.AllowedRotations = AllowedRotations.All; //All rotations still same as default
+                }
+                else
+                {
+                    InventoryManager.ConstructionCursor.AllowedRotations = __state;
+                }
+                CreativeFreedom.Log("Rotations allowed: " + InventoryManager.ConstructionCursor.AllowedRotations.ToString());
+            }
+        }
+
+        [UsedImplicitly]//dunno what is for, something for simpler replacing of the field values.
+        [HarmonyPostfix]
+        public static void LetAnyRotationByKeyAfter(in AllowedRotations __state)
+        {
+            if (FreedomConfig.UnlockRotations || Input.GetKey(CreativeFreedom.UnlimitHold) || CheckKeysPressed.UnSwitch)
+            {
+                if (InventoryManager.ConstructionCursor)
+                {
+                    InventoryManager.ConstructionCursor.AllowedRotations = __state;
+                }
+            }
+        }
+    }
+
+    [HarmonyPatch(typeof(InventoryManager), nameof(InventoryManager.UpdatePlacement), new Type[] { typeof(Constructor) })] //need a way to change param right at building cursor state
+                                                                                                                         //need try transpiler patching inside methods of InvenotoryManager
+
+    public static class Structure_Axis_Unlock_at_placement
+    {
+        //[HarmonyPatch("Awake")]
+        [UsedImplicitly]//dunno what is for, something for simpler replacing of the field values.
+        [HarmonyPrefix]
+        public static void LetAnyRotationAxisByKey(out RotationAxis __state)
+        {
+            __state = RotationAxis.All;
+            if (InventoryManager.ConstructionCursor)
+            {
+                __state = InventoryManager.ConstructionCursor.RotationAxis;
+
+                if (FreedomConfig.UnlockRotations || Input.GetKey(CreativeFreedom.UnlimitHold) || CheckKeysPressed.UnSwitch)
+                {
+                    
+                    InventoryManager.ConstructionCursor.RotationAxis = RotationAxis.All;
+                    
+                }
+                else
+                {
+                    InventoryManager.ConstructionCursor.RotationAxis = __state;
+                }
+            }
+        }
+
+        [UsedImplicitly]//dunno what is for, something for simpler replacing of the field values.
+        [HarmonyPostfix]
+        public static void LetAnyRotationByKeyAfter(in RotationAxis __state)
+        {
+            if (FreedomConfig.UnlockRotations || Input.GetKey(CreativeFreedom.UnlimitHold) || CheckKeysPressed.UnSwitch)
+            {
+                if (InventoryManager.ConstructionCursor)
+                {
+                    InventoryManager.ConstructionCursor.RotationAxis = __state;
+                }
+            }
+        }
+    }
+
+    //[HarmonyPatch(typeof(Structure),nameof(Structure.Awake))] //need a way to change param right at building cursor state
+    ////need try transpiler patching inside methods of InvenotoryManager
+
+    //public static class Structure_Rotation_Unlock
+    //{
+    //    //[HarmonyPatch("Awake")]
+    //    [UsedImplicitly]//dunno what is for, something for simpler replacing of the field values.
+    //    [HarmonyPostfix]
+    //    public static void LetAnyRotation(Structure __instance)
+    //    {
+    //        if (FreedomConfig.UnlockRotations)
+    //        {
+    //            __instance.RotationAxis = RotationAxis.All; //thanks for Kamuchi for idea of using the named enumerator values
+    //            __instance.AllowedRotations = AllowedRotations.All;
+    //        }
+    //        //Limit rotations for smartrotation
+
+    //        //TODO add rotationcheck somewhere at placement mode when construction checks is come
+    //        //learn transpiller
+
+    //        //TODO key switcher to change precisement of constructions
+    //        //__instance.GridSize = 0.5f; 
+    //        //__instance.PlacementType = PlacementSnap.Grid;
+    //    }
+    //}
+
     public static class Structure_Skip_CanConstruct
     {
+        [HarmonyPatch(typeof(Structure))] //its been missed but still works, how? Is it patch into every CanConstruct function?
         [HarmonyPatch("CanConstruct")]
         [UsedImplicitly]//dunno what is for, something for simpler replacing of the field values.
         [HarmonyPostfix]
         public static void SkipCanConstruct(ref CanConstructInfo __result)
         {
-            if (FreedomConfig.UnlockCollisions || Input.GetKey(BindValidate.HoldLimitsKey))
+            if (FreedomConfig.UnlockCollisions || Input.GetKey(CreativeFreedom.UnlimitHold) || CheckKeysPressed.UnSwitch)
             {
                 __result = CanConstructInfo.ValidPlacement;
             }
@@ -124,7 +249,7 @@ namespace CreativeFreedom //copy from dnSpy DECOMPILED last version as I lost la
         [UsedImplicitly]
         public static void ReturnCanConstructTrue(ref bool __result)
         {
-            if (FreedomConfig.UnlockCollisions || Input.GetKey(BindValidate.HoldLimitsKey))
+            if (FreedomConfig.UnlockCollisions || Input.GetKey(CreativeFreedom.UnlimitHold) || CheckKeysPressed.UnSwitch)
             {
                 __result = true;
             }
@@ -138,7 +263,7 @@ namespace CreativeFreedom //copy from dnSpy DECOMPILED last version as I lost la
         [UsedImplicitly]
         public static void CanConstructInfoTrue(ref CanConstructInfo __result)
         {
-            if (FreedomConfig.UnlockCollisions || Input.GetKey(BindValidate.HoldLimitsKey))
+            if (FreedomConfig.UnlockCollisions || Input.GetKey(CreativeFreedom.UnlimitHold) || CheckKeysPressed.UnSwitch)
             {
                 __result = new CanConstructInfo(true, string.Empty); //THANKS to proud2belamer (sth64) for this addition to reanimate this mod!
                 return;
@@ -195,7 +320,7 @@ namespace CreativeFreedom //copy from dnSpy DECOMPILED last version as I lost la
     {
         private static void Postfix(ref CanConstructInfo __result)
         {
-            if (FreedomConfig.UnlockCollisions || Input.GetKey(BindValidate.HoldLimitsKey))
+            if (FreedomConfig.UnlockCollisions || Input.GetKey(CreativeFreedom.UnlimitHold) || CheckKeysPressed.UnSwitch)
             {
                 __result = CanConstructInfo.ValidPlacement;
             }
@@ -210,7 +335,7 @@ namespace CreativeFreedom //copy from dnSpy DECOMPILED last version as I lost la
         [UsedImplicitly]
         public static void Postfix(ref bool __result)
         {
-            if (FreedomConfig.UnlockCollisions || Input.GetKey(BindValidate.HoldLimitsKey))
+            if (FreedomConfig.UnlockCollisions || Input.GetKey(CreativeFreedom.UnlimitHold) || CheckKeysPressed.UnSwitch)
             {
                 __result = false;
             }
@@ -224,7 +349,7 @@ namespace CreativeFreedom //copy from dnSpy DECOMPILED last version as I lost la
         [UsedImplicitly]
         public static void Postfix(ref bool __result)
         {
-            if (FreedomConfig.UnlockCollisions || Input.GetKey(BindValidate.HoldLimitsKey))
+            if (FreedomConfig.UnlockCollisions || Input.GetKey(CreativeFreedom.UnlimitHold) || CheckKeysPressed.UnSwitch)
             {
                 __result = true;
             }
@@ -237,7 +362,7 @@ namespace CreativeFreedom //copy from dnSpy DECOMPILED last version as I lost la
         [UsedImplicitly]
         public static void Postfix(ref bool __result)
         {
-            if (FreedomConfig.UnlockCollisions || Input.GetKey(BindValidate.HoldLimitsKey))
+            if (FreedomConfig.UnlockCollisions || Input.GetKey(CreativeFreedom.UnlimitHold) || CheckKeysPressed.UnSwitch)
             {
                 __result = true;
             }
@@ -251,7 +376,7 @@ namespace CreativeFreedom //copy from dnSpy DECOMPILED last version as I lost la
         [UsedImplicitly]
         private static void Postfix(ref CanMountResult __result)
         {
-            if (FreedomConfig.UnlockCollisions || Input.GetKey(BindValidate.HoldLimitsKey))
+            if (FreedomConfig.UnlockCollisions || Input.GetKey(CreativeFreedom.UnlimitHold) || CheckKeysPressed.UnSwitch)
             {
                 __result.result = WallMountResult.Valid;
             }

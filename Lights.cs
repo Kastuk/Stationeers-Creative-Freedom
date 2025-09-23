@@ -32,23 +32,23 @@ namespace CreativeFreedom
 {
     class Lights
     {
-        [HarmonyPatch(typeof(Headlamp), nameof(Headlamp.SetCustomColor))]
-        public static class ColoredLight
-        {
-            //[HarmonyPatch(nameof(StackableLight.Awake))]
-            [UsedImplicitly]
-            [HarmonyPostfix]
-            public static void ColoredHeadSpotLight(Headlamp __instance)
-            {
-                if (FreedomConfig.ColoredLight)
-                {
-                    foreach (ThingLight thingLight in __instance.Lights)
-                    {
-                        thingLight.Light.color = __instance.CustomColor.Light;
-                    }
-                }
-            }
-        }
+        //[HarmonyPatch(typeof(Headlamp), nameof(Headlamp.SetCustomColor))]
+        //public static class ColoredLight
+        //{
+        //    //[HarmonyPatch(nameof(StackableLight.Awake))]
+        //    [UsedImplicitly]
+        //    [HarmonyPostfix]
+        //    public static void ColoredHeadSpotLight(Headlamp __instance)
+        //    {
+        //        if (FreedomConfig.ColoredLight)
+        //        {
+        //            foreach (ThingLight thingLight in __instance.Lights)
+        //            {
+        //                thingLight.Light.color = __instance.CustomColor.Light;
+        //            }
+        //        }
+        //    }
+        //}
 
 
 
@@ -96,7 +96,7 @@ namespace CreativeFreedom
             //[HarmonyPatch(nameof(StackableLight.Awake))]
             [UsedImplicitly]
             [HarmonyPrefix]
-            public static bool NoUpdateNVision(Human __instance)
+            public static bool NoUpdateNVision()
             {
                 if (WorldManager.Instance.GameMode == GameMode.Creative && FreedomConfig.NVLight)
                 {

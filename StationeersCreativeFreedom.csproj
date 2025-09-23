@@ -39,9 +39,9 @@
     <Reference Include="0Harmony20">
       <HintPath>E:\SteamLibrary\steamapps\common\Stationeers\BepInEx\core\0Harmony20.dll</HintPath>
     </Reference>
-    <Reference Include="Assembly-CSharp, Version=0.2.4945.22425, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Assembly-CSharp, Version=0.2.5096.23159, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>E:\SteamLibrary\steamapps\common\Stationeers\rocketstation_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <HintPath>E:\Programs\Steam\steamapps\common\Stationeers\rocketstation_Data\Managed\Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="Assembly-CSharp-firstpass, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

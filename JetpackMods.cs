@@ -15,7 +15,7 @@ namespace CreativeFreedom
     {//taken from FuelJetpack created by Thunder
         public static float CheckSpeed(Jetpack jetpack)
         {
-            float baseJetpackSpeed = 3f;
+            float baseJetpackSpeed;
            // Debug.Log("Check speed of jetpack");
             switch (jetpack.PrefabHash)
             {
@@ -38,17 +38,18 @@ namespace CreativeFreedom
     }
 
 
-    [HarmonyPatch(typeof(MovementController), "HandleJetpack")]
+    [HarmonyPatch(typeof(Jetpack), "CalculateHeightEfficiency")]
     internal class Jetpack_HeightLimit
     {
         [UsedImplicitly]
-        private static void Prefix(MovementController __instance)
+        private static void Prefix(Jetpack __instance)
         {
             //bool jetpackSwitcher = ;
             if (FreedomConfig.JetpackSwitcher)
             {
                 //__instance.defaultJetpackMaxHeight = FreedomConfig.JetpackMaxHeight;
-                typeof(MovementController).GetField("defaultJetpackMaxHeight", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(__instance, FreedomConfig.JetpackMaxHeight);
+                __instance.MaximumHeight = (ushort)FreedomConfig.JetpackMaxHeight;
+                //typeof(Jetpack).GetField("MaximumHeight", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(__instance, FreedomConfig.JetpackMaxHeight);
                 //Debug.Log("Jetpack height limit is " + FreedomConfig.JetpackMaxHeight);
             }
         }
@@ -115,7 +116,7 @@ namespace CreativeFreedom
     {
         [UsedImplicitly]
         [HarmonyPrefix]
-        private static bool NoFumes(Jetpack __instance)
+        private static bool NoFumes()
         {
             bool flag = (FreedomConfig.JetpackSwitcher && FreedomConfig.InfiniteJetpack && WorldManager.Instance.GameMode == GameMode.Creative);
             return !flag;

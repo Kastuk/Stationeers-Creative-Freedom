@@ -70,36 +70,5 @@ using Assets.Scripts.Objects.Entities;
                 else return true;
             }
         }
-
-        [HarmonyPatch(typeof(DynamicInvPanel), "Initialize")] //make spawn menu bigger for unusual monitors
-        public class ChangeDynamicInvPanelSize2
-        {
-            private static CanvasScaler canv;
-
-            [UsedImplicitly]
-            public static void Postfix(DynamicInvPanel __instance)
-            {
-                if (ChangeDynamicInvPanelSize2.canv == null)
-                {
-                    var _canv = typeof(DynamicInvPanel).GetField("_canvas", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(__instance);
-                    Canvas iscanv = _canv as Canvas;
-                    if (iscanv) ChangeDynamicInvPanelSize2.canv = iscanv.GetComponent<CanvasScaler>();//__instance._canvas.GetComponent<CanvasScaler>();
-                }
-                if (FreedomConfig.SpawnMenuScaleMode)
-                {
-                    Debug.Log("CF. Switch scale mode of Spawn menu to: Constant Pixel Size.");
-                    ChangeDynamicInvPanelSize2.canv.uiScaleMode = CanvasScaler.ScaleMode.ConstantPixelSize;
-                }
-                else
-                {
-                    if (!FreedomConfig.SpawnMenuScaleMode)
-                    {
-                        Debug.Log("CF. Scale mode of Spawn menu is default: Scale With Screen Size.");
-                        ChangeDynamicInvPanelSize2.canv.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-                    }
-                }
-            }
-        }
-
     }
 }
